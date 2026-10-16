@@ -16,12 +16,14 @@ namespace Game.Core
     {
         private static readonly Dictionary<Type, Delegate> Handlers = new Dictionary<Type, Delegate>();
 
+        /// <summary>Подписаться на события типа T.</summary>
         public static void Subscribe<T>(Action<T> handler) where T : struct, IGameEvent
         {
             Handlers.TryGetValue(typeof(T), out var existing);
             Handlers[typeof(T)] = Delegate.Combine(existing, handler);
         }
 
+        /// <summary>Отписаться от событий типа T.</summary>
         public static void Unsubscribe<T>(Action<T> handler) where T : struct, IGameEvent
         {
             if (!Handlers.TryGetValue(typeof(T), out var existing)) return;
@@ -31,6 +33,7 @@ namespace Game.Core
             else Handlers[typeof(T)] = result;
         }
 
+        /// <summary>Разослать событие всем подписчикам типа T.</summary>
         public static void Publish<T>(T gameEvent) where T : struct, IGameEvent
         {
             if (Handlers.TryGetValue(typeof(T), out var handler))

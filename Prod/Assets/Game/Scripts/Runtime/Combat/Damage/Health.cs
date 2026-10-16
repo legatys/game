@@ -11,25 +11,37 @@ namespace Game.Combat
     /// </summary>
     public sealed class Health : MonoBehaviour, IDamageable
     {
+        /// <summary>Максимальное здоровье.</summary>
         [SerializeField] private float maxHealth = 100f;
+        /// <summary>Не получать урон (для отладки).</summary>
         [SerializeField] private bool invulnerable;
 
+        /// <summary>Через сколько секунд после урона начинается регенерация.</summary>
         [Header("Регенерация (0 — выключена)")]
         [SerializeField] private float regenDelay = 4f;
+        /// <summary>Восстановление здоровья в секунду (0 — без регенерации).</summary>
         [SerializeField] private float regenPerSecond;
 
         private float _timeSinceDamage;
 
+        /// <summary>Текущее здоровье.</summary>
         public float Current { get; private set; }
+        /// <summary>Максимальное здоровье.</summary>
         public float Max => maxHealth;
+        /// <summary>Здоровье в долях от максимума (0..1).</summary>
         public float Normalized => maxHealth > 0f ? Current / maxHealth : 0f;
+        /// <inheritdoc />
         public bool IsAlive => Current > 0f;
+        /// <inheritdoc />
         public Transform DamageRoot => transform;
 
+        /// <summary>Получен урон (вызывается и на смертельном попадании).</summary>
         public event Action<DamageInfo> Damaged;
+        /// <summary>Здоровье дошло до нуля.</summary>
         public event Action<DamageInfo> Died;
         /// <summary>(текущее, максимальное)</summary>
         public event Action<float, float> Changed;
+        /// <summary>Здоровье восстановлено через Revive().</summary>
         public event Action Revived;
 
         private void Awake() => Current = maxHealth;
@@ -43,6 +55,7 @@ namespace Game.Combat
             Current = maxHealth;
         }
 
+        /// <summary>Уменьшает здоровье, вызывает события и публикует DamageDealtEvent.</summary>
         public void ApplyDamage(in DamageInfo info)
         {
             if (!IsAlive || invulnerable || info.Amount <= 0f) return;

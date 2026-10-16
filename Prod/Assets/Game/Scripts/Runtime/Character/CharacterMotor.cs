@@ -12,8 +12,11 @@ namespace Game.Character
     [RequireComponent(typeof(CharacterController))]
     public sealed class CharacterMotor : MonoBehaviour
     {
+        /// <summary>Скорость прижатия к земле на склонах и ступеньках, м/с.</summary>
         [SerializeField] private float groundStickVelocity = -2f;
+        /// <summary>Предельная скорость падения, м/с.</summary>
         [SerializeField] private float maxFallSpeed = 50f;
+        /// <summary>Слои для проверки потолка.</summary>
         [SerializeField] private LayerMask collisionMask = ~0;
 
         private CharacterController _controller;
@@ -22,16 +25,21 @@ namespace Game.Character
         private float _targetHeight;
         private float _heightChangeSpeed = 6f;
 
+        /// <summary>Используемый CharacterController.</summary>
         public CharacterController Controller => _controller;
         /// <summary>Желаемая скорость (то, что мы задаём).</summary>
         public Vector3 Velocity => _velocity;
         /// <summary>Фактическая скорость после столкновений — для анимаций.</summary>
         public Vector3 ActualVelocity { get; private set; }
+        /// <summary>Горизонтальная составляющая скорости.</summary>
         public Vector3 PlanarVelocity => new Vector3(_velocity.x, 0f, _velocity.z);
+        /// <summary>Стоит ли на земле.</summary>
         public bool IsGrounded { get; private set; }
         /// <summary>Сколько секунд персонаж в воздухе (0 на земле).</summary>
         public float AirTime { get; private set; }
+        /// <summary>Текущий рост капсулы.</summary>
         public float Height => _controller.height;
+        /// <summary>Радиус капсулы.</summary>
         public float Radius => _controller.radius;
 
         /// <summary>Приземлился; параметр — вертикальная скорость в момент удара (отрицательная).</summary>
@@ -51,6 +59,7 @@ namespace Game.Character
             _velocity.z = planar.z;
         }
 
+        /// <summary>Мгновенно задать горизонтальную скорость.</summary>
         public void SetPlanarVelocity(Vector3 planarVelocity)
         {
             _velocity.x = planarVelocity.x;
@@ -71,6 +80,7 @@ namespace Game.Character
             ForceUngrounded();
         }
 
+        /// <summary>Добавить скорость (толчок).</summary>
         public void AddImpulse(Vector3 impulse)
         {
             _velocity += impulse;
@@ -120,6 +130,7 @@ namespace Game.Character
             return !PhysicsQuery.SphereCast(new Ray(origin, Vector3.up), radius, distance, collisionMask, transform, out _);
         }
 
+        /// <summary>Повернуть персонажа к горизонтальному направлению с ограничением скорости.</summary>
         public void RotateTowards(Vector3 direction, float degreesPerSecond, float deltaTime)
         {
             direction.y = 0f;

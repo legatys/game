@@ -10,16 +10,20 @@ namespace Game.Character.States
     {
         private float _maxAirSpeed;
 
+        /// <summary>Создаёт состояние для игрока <paramref name="player"/>.</summary>
         public AirborneState(PlayerCharacter player) : base(player) { }
 
+        /// <inheritdoc />
         public override string Name => Motor.Velocity.y > 0f ? "Jump" : "Fall";
 
+        /// <summary>Выполняет прыжок, если вход был по нажатию, и запоминает скорость для управления в воздухе.</summary>
         public override void Enter()
         {
             if (Player.TryConsumeJumpRequest()) Player.PerformJump();
             _maxAirSpeed = Mathf.Max(Config.runSpeed, Motor.PlanarVelocity.magnitude);
         }
 
+        /// <summary>Прыжки в воздухе и слабое управление направлением.</summary>
         protected override void OnTick(float deltaTime)
         {
             if (Player.HasJumpRequest && Player.AirJumpsRemaining > 0)

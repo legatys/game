@@ -11,12 +11,14 @@ namespace Game.Core
     {
         private static readonly RaycastHit[] Buffer = new RaycastHit[32];
 
+        /// <summary>Ближайшее попадание луча, кроме коллайдеров внутри <paramref name="ignoreRoot"/>.</summary>
         public static bool Raycast(Ray ray, float maxDistance, LayerMask mask, Transform ignoreRoot, out RaycastHit hit)
         {
             var count = Physics.RaycastNonAlloc(ray, Buffer, maxDistance, mask, QueryTriggerInteraction.Ignore);
             return Closest(count, ignoreRoot, out hit);
         }
 
+        /// <summary>Ближайшее попадание сферокаста, кроме коллайдеров внутри <paramref name="ignoreRoot"/>.</summary>
         public static bool SphereCast(Ray ray, float radius, float maxDistance, LayerMask mask, Transform ignoreRoot, out RaycastHit hit)
         {
             var count = Physics.SphereCastNonAlloc(ray, radius, Buffer, maxDistance, mask, QueryTriggerInteraction.Ignore);

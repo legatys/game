@@ -18,6 +18,7 @@ namespace Game.Combat.Weapons
         private float _reloadTimer;
         private bool _isAiming;
 
+        /// <summary>Создаёт оружие с полным магазином и стартовым запасом из определения.</summary>
         public Weapon(WeaponDefinition definition, WeaponView view, IFireMode fireMode, IShotStrategy shot)
         {
             Definition = definition;
@@ -28,25 +29,38 @@ namespace Game.Combat.Weapons
             ReserveAmmo = definition.startingReserve;
         }
 
+        /// <summary>Данные оружия.</summary>
         public WeaponDefinition Definition { get; }
+        /// <summary>Модель оружия (может быть null у ИИ без визуала).</summary>
         public WeaponView View { get; }
 
+        /// <summary>Патронов в магазине.</summary>
         public int AmmoInMagazine { get; private set; }
+        /// <summary>Патронов в запасе.</summary>
         public int ReserveAmmo { get; private set; }
         /// <summary>Бесконечный запас (для ИИ).</summary>
         public bool InfiniteReserve { get; set; }
+        /// <summary>Идёт перезарядка.</summary>
         public bool IsReloading { get; private set; }
+        /// <summary>Прогресс перезарядки 0..1.</summary>
         public float ReloadProgress => IsReloading ? 1f - _reloadTimer / Definition.reloadTime : 0f;
 
+        /// <summary>Магазин пуст и перезарядка не идёт.</summary>
         public bool IsEmpty => AmmoInMagazine <= 0 && !IsReloading;
+        /// <summary>Можно выстрелить прямо сейчас.</summary>
         public bool IsReadyToFire => !IsReloading && _cooldown <= 0f && AmmoInMagazine > 0;
         /// <summary>Текущий разброс в градусах (база от прицеливания + "раскрытие" от стрельбы).</summary>
         public float CurrentSpread => (_isAiming ? Definition.aimSpread : Definition.hipSpread) + _bloom;
 
+        /// <summary>Произведён выстрел.</summary>
         public event Action<Weapon> Fired;
+        /// <summary>Попытка выстрела с пустым магазином.</summary>
         public event Action<Weapon> DryFired;
+        /// <summary>Изменились патроны в магазине или запасе.</summary>
         public event Action<Weapon> AmmoChanged;
+        /// <summary>Началась перезарядка.</summary>
         public event Action<Weapon> ReloadStarted;
+        /// <summary>Перезарядка завершена.</summary>
         public event Action<Weapon> ReloadFinished;
 
         /// <summary>Вызывается владельцем каждый кадр, пока оружие в руках.</summary>
@@ -88,6 +102,7 @@ namespace Game.Combat.Weapons
             return true;
         }
 
+        /// <summary>Начать перезарядку, если магазин не полон и есть запас.</summary>
         public bool TryReload()
         {
             if (IsReloading || AmmoInMagazine >= Definition.magazineSize) return false;
@@ -100,6 +115,7 @@ namespace Game.Combat.Weapons
             return true;
         }
 
+        /// <summary>Прервать перезарядку (патроны не переносятся).</summary>
         public void CancelReload()
         {
             IsReloading = false;
@@ -114,6 +130,7 @@ namespace Game.Combat.Weapons
             if (View != null) View.SetVisible(false);
         }
 
+        /// <summary>Достать оружие: показать модель.</summary>
         public void Draw()
         {
             if (View != null) View.SetVisible(true);

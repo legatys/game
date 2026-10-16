@@ -7,12 +7,17 @@ namespace Game.AI.States
     public sealed class TurretIdleState : IState
     {
         private readonly EnemyTurret _turret;
+        /// <summary>Создаёт состояние для турели <paramref name="turret"/>.</summary>
         public TurretIdleState(EnemyTurret turret) => _turret = turret;
 
+        /// <inheritdoc />
         public string Name => "Idle";
+        /// <inheritdoc />
         public void Enter() { }
+        /// <inheritdoc />
         public void Exit() { }
 
+        /// <summary>Вращает башню и держит курок отпущенным.</summary>
         public void Tick(float deltaTime)
         {
             _turret.Scan(deltaTime);
@@ -29,12 +34,17 @@ namespace Game.AI.States
         private readonly EnemyTurret _turret;
         private float _timer;
 
+        /// <summary>Создаёт состояние для турели <paramref name="turret"/>.</summary>
         public TurretAttackState(EnemyTurret turret) => _turret = turret;
 
+        /// <inheritdoc />
         public string Name => "Attack";
+        /// <summary>Сбрасывает таймер: перед первой очередью есть время реакции.</summary>
         public void Enter() => _timer = -0.4f; // реакция перед первой очередью
+        /// <inheritdoc />
         public void Exit() { }
 
+        /// <summary>Наводится на цель и стреляет очередями с паузами.</summary>
         public void Tick(float deltaTime)
         {
             _timer += deltaTime;
@@ -52,18 +62,23 @@ namespace Game.AI.States
         private readonly EnemyTurret _turret;
         private float _timer;
 
+        /// <summary>Создаёт состояние для турели <paramref name="turret"/>.</summary>
         public TurretDeadState(EnemyTurret turret) => _turret = turret;
 
+        /// <inheritdoc />
         public string Name => "Dead";
 
+        /// <summary>Скрывает турель и запускает таймер восстановления.</summary>
         public void Enter()
         {
             _timer = _turret.RespawnDelay;
             _turret.SetVisible(false);
         }
 
+        /// <summary>Показывает турель снова.</summary>
         public void Exit() => _turret.SetVisible(true);
 
+        /// <summary>Отсчитывает время и восстанавливает здоровье.</summary>
         public void Tick(float deltaTime)
         {
             _timer -= deltaTime;

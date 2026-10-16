@@ -26,6 +26,7 @@ namespace Game.Demo
             return go;
         }
 
+        /// <summary>Пустой дочерний объект в локальной позиции.</summary>
         public static Transform Child(string name, Transform parent, Vector3 localPosition)
         {
             var child = new GameObject(name).transform;

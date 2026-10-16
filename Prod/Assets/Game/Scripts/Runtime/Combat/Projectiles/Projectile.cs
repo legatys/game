@@ -10,8 +10,11 @@ namespace Game.Combat
     /// </summary>
     public sealed class Projectile : MonoBehaviour, IPoolable
     {
+        /// <summary>Через сколько секунд снаряд взрывается сам.</summary>
         [SerializeField] private float lifetime = 5f;
+        /// <summary>Эффект взрыва.</summary>
         [SerializeField] private GameObject explosionEffectPrefab;
+        /// <summary>Сила толчка физических объектов взрывом.</summary>
         [SerializeField] private float explosionForce = 12f;
 
         private TrailRenderer _trail;
@@ -23,8 +26,10 @@ namespace Game.Combat
 
         private void Awake() => _trail = GetComponentInChildren<TrailRenderer>();
 
+        /// <summary>Задаёт эффект взрыва. Вызывать до активации объекта.</summary>
         public void Configure(GameObject explosionEffect) => explosionEffectPrefab = explosionEffect;
 
+        /// <summary>Запускает снаряд со скоростью <paramref name="velocity"/>; урон и радиус берутся из <paramref name="definition"/>.</summary>
         public void Launch(Vector3 velocity, WeaponDefinition definition, GameObject owner)
         {
             if (_trail != null) _trail.Clear(); // иначе след из пула тянется с прошлой позиции
@@ -35,7 +40,9 @@ namespace Game.Combat
             _active = true;
         }
 
+        /// <inheritdoc />
         public void OnSpawned() => _active = false;
+        /// <inheritdoc />
         public void OnDespawned() => _active = false;
 
         private void Update()

@@ -10,15 +10,20 @@ namespace Game.Demo
     /// </summary>
     public interface IMaterialProvider
     {
+        /// <summary>Материал с освещением.</summary>
         Material Lit(string name, Color color, float smoothness = 0.25f);
+        /// <summary>Светящийся материал.</summary>
         Material Emissive(string name, Color color, float intensity = 2f);
+        /// <summary>Материал без освещения.</summary>
         Material Unlit(string name, Color color);
+        /// <summary>Материал с текстурой-шахматкой.</summary>
         Material Checker(string name, Color a, Color b, float tiling);
     }
 
     /// <summary>Создание материалов URP (Lit/Unlit) с запасным вариантом на встроенные шейдеры.</summary>
     public static class MaterialFactory
     {
+        /// <summary>Новый материал URP Lit (или Standard).</summary>
         public static Material CreateLit(string name, Color color, float smoothness)
         {
             var material = new Material(FindShader("Universal Render Pipeline/Lit", "Standard")) { name = name };
@@ -28,6 +33,7 @@ namespace Game.Demo
             return material;
         }
 
+        /// <summary>Новый светящийся Lit-материал.</summary>
         public static Material CreateEmissive(string name, Color color, float intensity)
         {
             var material = CreateLit(name, color, 0.3f);
@@ -37,6 +43,7 @@ namespace Game.Demo
             return material;
         }
 
+        /// <summary>Новый материал URP Unlit (или Unlit/Color).</summary>
         public static Material CreateUnlit(string name, Color color)
         {
             var material = new Material(FindShader("Universal Render Pipeline/Unlit", "Unlit/Color")) { name = name };
@@ -44,6 +51,7 @@ namespace Game.Demo
             return material;
         }
 
+        /// <summary>Новый Lit-материал с текстурой и тайлингом.</summary>
         public static Material CreateChecker(string name, Texture2D texture, float tiling)
         {
             var material = CreateLit(name, Color.white, 0.1f);
@@ -81,6 +89,7 @@ namespace Game.Demo
             return texture;
         }
 
+        /// <summary>Задаёт цвет и для URP (_BaseColor), и для встроенных шейдеров (_Color).</summary>
         public static void SetColor(Material material, Color color)
         {
             if (material.HasProperty("_BaseColor")) material.SetColor("_BaseColor", color);
@@ -101,17 +110,22 @@ namespace Game.Demo
         private readonly HideFlags _hideFlags;
 
         /// <param name="hideFlags">Для превью в редакторе — DontSave, чтобы материалы не попали в сцену.</param>
+        /// <summary>Создаёт провайдер; <paramref name="hideFlags"/> назначаются всем созданным материалам.</summary>
         public RuntimeMaterialProvider(HideFlags hideFlags = HideFlags.None) => _hideFlags = hideFlags;
 
+        /// <inheritdoc />
         public Material Lit(string name, Color color, float smoothness = 0.25f) =>
             Cached(name, () => MaterialFactory.CreateLit(name, color, smoothness));
 
+        /// <inheritdoc />
         public Material Emissive(string name, Color color, float intensity = 2f) =>
             Cached(name, () => MaterialFactory.CreateEmissive(name, color, intensity));
 
+        /// <inheritdoc />
         public Material Unlit(string name, Color color) =>
             Cached(name, () => MaterialFactory.CreateUnlit(name, color));
 
+        /// <inheritdoc />
         public Material Checker(string name, Color a, Color b, float tiling) =>
             Cached(name, () =>
             {

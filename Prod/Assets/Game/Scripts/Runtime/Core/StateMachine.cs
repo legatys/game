@@ -8,8 +8,11 @@ namespace Game.Core
     {
         /// <summary>Имя для отладки и HUD.</summary>
         string Name { get; }
+        /// <summary>Вход в состояние.</summary>
         void Enter();
+        /// <summary>Кадр в состоянии.</summary>
         void Tick(float deltaTime);
+        /// <summary>Выход из состояния.</summary>
         void Exit();
     }
 
@@ -39,7 +42,9 @@ namespace Game.Core
         private readonly List<Transition> _anyTransitions = new List<Transition>();
         private List<Transition> _currentTransitions = NoTransitions;
 
+        /// <summary>Текущее состояние.</summary>
         public IState Current { get; private set; }
+        /// <summary>Предыдущее состояние.</summary>
         public IState Previous { get; private set; }
 
         /// <summary>(предыдущее, новое) — вызывается после смены состояния.</summary>
@@ -64,6 +69,7 @@ namespace Game.Core
             _anyTransitions.Add(new Transition(to, condition));
         }
 
+        /// <summary>Немедленно перейти в состояние (Exit старого → Enter нового).</summary>
         public void SetState(IState state)
         {
             if (state == null || state == Current) return;

@@ -15,22 +15,32 @@ namespace Game.AI
     [RequireComponent(typeof(Health))]
     public sealed class EnemyTurret : MonoBehaviour
     {
+        /// <summary>Часть, поворачивающаяся по горизонтали.</summary>
         [Header("Части модели")]
         [SerializeField] private Transform yawPivot;
+        /// <summary>Часть, наклоняющаяся по вертикали (внутри yawPivot).</summary>
         [SerializeField] private Transform pitchPivot;
+        /// <summary>Куда крепится модель оружия.</summary>
         [SerializeField] private Transform weaponSocket;
 
+        /// <summary>Оружие турели.</summary>
         [Header("Оружие")]
         [SerializeField] private WeaponDefinition weapon;
         [Tooltip("Дополнительный разброс ИИ, чтобы он не был снайпером")]
         [SerializeField] private float extraSpread = 1.5f;
 
+        /// <summary>Дальность обнаружения игрока, м.</summary>
         [Header("Поведение")]
         [SerializeField] private float detectionRange = 30f;
+        /// <summary>Скорость поворота башни, градусов в секунду.</summary>
         [SerializeField] private float turnSpeed = 90f;
+        /// <summary>Стрелять, только если ствол отклонён от цели меньше чем на столько градусов.</summary>
         [SerializeField] private float fireAngleTolerance = 4f;
+        /// <summary>Скорость вращения при поиске цели, градусов в секунду.</summary>
         [SerializeField] private float idleScanSpeed = 25f;
+        /// <summary>Через сколько секунд уничтоженная турель восстанавливается.</summary>
         [SerializeField] private float respawnDelay = 6f;
+        /// <summary>Слои, которые перекрывают обзор.</summary>
         [SerializeField] private LayerMask sightMask = ~0;
 
         private StateMachine _stateMachine;
@@ -38,10 +48,15 @@ namespace Game.AI
         private Weapon _weapon;
         private PlayerCharacter _target;
 
+        /// <summary>Здоровье турели.</summary>
         public Health Health => _health;
+        /// <summary>Экземпляр оружия турели (бесконечные патроны).</summary>
         public Weapon Weapon => _weapon;
+        /// <summary>Скорость вращения при поиске цели.</summary>
         public float IdleScanSpeed => idleScanSpeed;
+        /// <summary>Задержка восстановления после уничтожения.</summary>
         public float RespawnDelay => respawnDelay;
+        /// <summary>Имя текущего состояния ИИ (для отладки).</summary>
         public string CurrentStateName => _stateMachine?.Current?.Name ?? "-";
 
         private void Awake()
@@ -88,6 +103,7 @@ namespace Game.AI
 
         // ---------- API для состояний ----------
 
+        /// <summary>Игрок жив, в радиусе и не закрыт препятствием.</summary>
         public bool CanSeeTarget()
         {
             if (!TryGetTarget(out var target)) return false;
@@ -101,6 +117,7 @@ namespace Game.AI
                    && hit.transform.IsChildOf(target.Root);
         }
 
+        /// <summary>Точка, в которую целиться (уровень плеч игрока).</summary>
         public Vector3 TargetPoint => TryGetTarget(out var target) ? target.PivotPosition : pitchPivot.position + pitchPivot.forward;
 
         /// <summary>Повернуть башню к точке. Возвращает угол между стволом и целью.</summary>
@@ -122,6 +139,7 @@ namespace Game.AI
             return Vector3.Angle(pitchPivot.forward, direction);
         }
 
+        /// <summary>Медленно вращает башню в поиске цели.</summary>
         public void Scan(float deltaTime) => yawPivot.Rotate(0f, idleScanSpeed * deltaTime, 0f, Space.World);
 
         /// <summary>Тик оружия: trigger — держать ли курок.</summary>

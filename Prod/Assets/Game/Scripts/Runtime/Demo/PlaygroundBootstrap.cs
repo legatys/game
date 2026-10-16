@@ -24,6 +24,7 @@ namespace Game.Demo
         [SerializeField] private MovementConfig movementConfig;
         [Tooltip("Пусто — значения по умолчанию")]
         [SerializeField] private CameraConfig cameraConfig;
+        /// <summary>Показывать превью полигона в режиме редактирования.</summary>
         [SerializeField] private bool showPreviewInEditor = true;
 
         private GameObject _preview;

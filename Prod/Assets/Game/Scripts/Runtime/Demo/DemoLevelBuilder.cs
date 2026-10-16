@@ -24,6 +24,7 @@ namespace Game.Demo
         private Transform _level;
         private Material _wall, _cover, _crate;
 
+        /// <summary>Создаёт строитель уровня с материалами, шаблонами и способом расстановки.</summary>
         public DemoLevelBuilder(IMaterialProvider materials, DemoPrefabs prefabs, PlaceFunc place)
         {
             _materials = materials;
@@ -34,6 +35,7 @@ namespace Game.Demo
         /// <summary>Точка появления игрока (создаётся вместе с уровнем).</summary>
         public Transform SpawnPoint { get; private set; }
 
+        /// <summary>Строит уровень внутри <paramref name="parent"/> и возвращает его корень.</summary>
         public Transform Build(Transform parent)
         {
             _level = new GameObject("Level").transform;

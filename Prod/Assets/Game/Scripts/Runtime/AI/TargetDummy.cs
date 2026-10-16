@@ -10,8 +10,11 @@ namespace Game.AI
     [RequireComponent(typeof(Health))]
     public sealed class TargetDummy : MonoBehaviour
     {
+        /// <summary>Через сколько секунд мишень появляется снова.</summary>
         [SerializeField] private float respawnDelay = 3f;
+        /// <summary>Цвет вспышки при попадании.</summary>
         [SerializeField] private Color flashColor = Color.white;
+        /// <summary>Длительность вспышки, сек.</summary>
         [SerializeField] private float flashDuration = 0.08f;
 
         private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");

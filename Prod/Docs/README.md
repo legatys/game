@@ -1,6 +1,18 @@
 # TPS Skeleton — базовый скелет шутера от третьего лица
 
-Unity 6 (6000.5), URP, Input System. Весь код лежит в `Assets/Game/Scripts`, UML-схема — в [`Docs/UML.md`](UML.md) и `Prod_di.drawio`.
+Unity 6 (6000.5), URP, Input System. Весь код лежит в `Assets/Game/Scripts`.
+
+## Документация
+
+| Документ | Что внутри |
+|---|---|
+| [README.md](README.md) | Быстрый старт, управление, как менять анимации и модель |
+| [ARCHITECTURE.md](ARCHITECTURE.md) | Как устроен код: пакеты, запуск, кадр игры, движение, камера, стрельба, урон, анимации, ИИ, UI, сервисы и события, паттерны, как расширять |
+| [API.md](API.md) | Справочник: каждый класс, поле, свойство, событие и метод с описанием (генерируется из кода) |
+| [UML.md](UML.md) | UML-диаграммы классов (`uml/ClassDiagram.drawio.svg`, `uml/EditorDiagram.drawio.svg`, `uml/Packages.drawio.svg`) и таблица классов |
+| `../Prod_di.drawio` | Те же диаграммы для редактирования в draw.io (3 страницы) |
+
+![Классы игры](uml/ClassDiagram.drawio.svg)
 
 ## Быстрый старт
 
@@ -77,13 +89,12 @@ Unity 6 (6000.5), URP, Input System. Весь код лежит в `Assets/Game/
 | Другой HUD (uGUI/TMP) | Новая реализация `IHudView` вместо `ImGuiHudView` |
 | Глобальный сервис | Создать и зарегистрировать в `CoreServices.Install()` |
 
-**После добавления класса обновите UML**: опишите класс (`C(...)`) и его связи (`R(...)`) в `Docs/uml/uml_model.py` и запустите из папки `Prod`:
+**После добавления класса обновите документацию**: допишите `/// <summary>` к публичным членам, опишите класс (`C(...)`) и его связи (`R(...)`) в `Docs/tools/uml_model.py` и запустите из папки `Prod` (нужны Python 3 и [graphviz](https://graphviz.org/download/)):
 
 ```bash
-python3 Docs/uml/generate_uml.py
+python3 Docs/tools/generate_api_docs.py   # Docs/API.md
+python3 Docs/tools/generate_uml.py        # Docs/uml/*.drawio.svg, Prod_di.drawio, Docs/UML.md
 ```
-
-Скрипт перегенерирует `Prod_di.drawio` и `Docs/UML.md`.
 
 ## Генератор (Tools → TPS Skeleton)
 

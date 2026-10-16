@@ -10,19 +10,26 @@ namespace Game.Combat.Weapons
     /// </summary>
     public sealed class WeaponInventory : MonoBehaviour
     {
+        /// <summary>Оружие, выдаваемое при появлении.</summary>
         [SerializeField] private WeaponDefinition[] startingWeapons = Array.Empty<WeaponDefinition>();
         [Tooltip("Куда крепится модель оружия (обычно WeaponSocket на груди/руке)")]
         [SerializeField] private Transform weaponSocket;
+        /// <summary>Максимум слотов.</summary>
         [SerializeField] private int maxWeapons = 4;
 
         private readonly List<Weapon> _weapons = new List<Weapon>();
         private int _index = -1;
 
+        /// <summary>Всё оружие в слотах.</summary>
         public IReadOnlyList<Weapon> Weapons => _weapons;
+        /// <summary>Индекс оружия в руках (-1 — нет).</summary>
         public int CurrentIndex => _index;
+        /// <summary>Оружие в руках (или null).</summary>
         public Weapon Current => _index >= 0 && _index < _weapons.Count ? _weapons[_index] : null;
 
+        /// <summary>Сменилось оружие в руках.</summary>
         public event Action<Weapon> WeaponEquipped;
+        /// <summary>Добавлено новое оружие.</summary>
         public event Action<Weapon> WeaponAdded;
 
         private void Awake()
@@ -61,6 +68,7 @@ namespace Game.Combat.Weapons
             return weapon;
         }
 
+        /// <summary>Взять оружие из слота <paramref name="index"/>. false — слот пуст или уже в руках.</summary>
         public bool Equip(int index)
         {
             if (index < 0 || index >= _weapons.Count || index == _index) return false;
@@ -72,7 +80,9 @@ namespace Game.Combat.Weapons
             return true;
         }
 
+        /// <summary>Следующее оружие по кругу.</summary>
         public void EquipNext() => Cycle(1);
+        /// <summary>Предыдущее оружие по кругу.</summary>
         public void EquipPrevious() => Cycle(-1);
 
         /// <summary>Добавить всему оружию по magazines магазинов. Возвращает суммарно добавленное.</summary>

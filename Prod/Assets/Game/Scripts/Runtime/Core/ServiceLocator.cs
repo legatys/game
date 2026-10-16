@@ -13,6 +13,7 @@ namespace Game.Core
     {
         private static readonly Dictionary<Type, object> Services = new Dictionary<Type, object>();
 
+        /// <summary>Зарегистрировать сервис под типом T (заменяет предыдущий).</summary>
         public static void Register<T>(T service) where T : class
         {
             if (service == null) throw new ArgumentNullException(nameof(service));
@@ -26,6 +27,7 @@ namespace Game.Core
                 Services.Remove(typeof(T));
         }
 
+        /// <summary>Найти сервис типа T; false, если его нет или он уничтожен.</summary>
         public static bool TryGet<T>(out T service) where T : class
         {
             if (Services.TryGetValue(typeof(T), out var raw) && raw is T typed && IsAlive(typed))
@@ -38,12 +40,14 @@ namespace Game.Core
             return false;
         }
 
+        /// <summary>Найти сервис типа T или выбросить исключение.</summary>
         public static T Get<T>() where T : class
         {
             if (TryGet(out T service)) return service;
             throw new InvalidOperationException($"[ServiceLocator] Сервис {typeof(T).Name} не зарегистрирован.");
         }
 
+        /// <summary>Удалить все сервисы.</summary>
         public static void Clear() => Services.Clear();
 
         // Unity-объекты могут быть уничтожены, а ссылка в словаре останется — проверяем это.

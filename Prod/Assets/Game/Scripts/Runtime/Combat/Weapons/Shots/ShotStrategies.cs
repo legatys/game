@@ -9,12 +9,14 @@ namespace Game.Combat.Weapons
     /// </summary>
     public interface IShotStrategy
     {
+        /// <summary>Выполнить выстрел.</summary>
         void Fire(in ShotContext context);
     }
 
     /// <summary>Мгновенный луч (пистолет, винтовка).</summary>
     public sealed class HitscanShot : IShotStrategy
     {
+        /// <inheritdoc />
         public void Fire(in ShotContext context)
         {
             var direction = PhysicsQuery.RandomInCone(context.BaseDirection, context.SpreadDegrees);
@@ -25,6 +27,7 @@ namespace Game.Combat.Weapons
     /// <summary>Несколько лучей-дробинок за выстрел (дробовик).</summary>
     public sealed class SpreadShot : IShotStrategy
     {
+        /// <inheritdoc />
         public void Fire(in ShotContext context)
         {
             var definition = context.Definition;
@@ -41,6 +44,7 @@ namespace Game.Combat.Weapons
     /// <summary>Физический снаряд из пула (гранатомёт, ракета).</summary>
     public sealed class ProjectileShot : IShotStrategy
     {
+        /// <inheritdoc />
         public void Fire(in ShotContext context)
         {
             var definition = context.Definition;
@@ -59,6 +63,7 @@ namespace Game.Combat.Weapons
     /// <summary>Общий код лучевых выстрелов: рейкаст, урон, сила удара, эффекты.</summary>
     public static class ShotUtility
     {
+        /// <summary>Луч по направлению <paramref name="direction"/>: урон, импульс, эффект попадания, трассер.</summary>
         public static void FireRay(in ShotContext context, Vector3 direction, float damage)
         {
             var definition = context.Definition;

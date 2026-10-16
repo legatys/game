@@ -16,9 +16,13 @@ namespace Game.Animations
     [RequireComponent(typeof(PlayerCharacter))]
     public sealed class CharacterAnimator : MonoBehaviour
     {
+        /// <summary>Animator модели. Пусто — ищется в дочерних объектах.</summary>
         [SerializeField] private Animator animator;
+        /// <summary>Набор анимаций; его контроллер подставляется в Animator.</summary>
         [SerializeField] private AnimationSet animationSet;
+        /// <summary>Сглаживание параметров движения, сек.</summary>
         [SerializeField] private float locomotionDamping = 0.1f;
+        /// <summary>Скорость изменения веса слоя UpperBody в секунду.</summary>
         [SerializeField] private float upperBodyBlendSpeed = 8f;
         [Tooltip("Сколько держать слой верха тела после выстрела/попадания")]
         [SerializeField] private float actionHoldTime = 0.35f;
@@ -40,6 +44,7 @@ namespace Game.Animations
         private Vector3 _visualBaseScale = Vector3.one;
         private Quaternion _visualBaseRotation = Quaternion.identity;
 
+        /// <summary>Используемый Animator.</summary>
         public Animator Animator => animator;
 
         /// <summary>Настройка из кода. Вызывать до активации объекта (до Awake).</summary>

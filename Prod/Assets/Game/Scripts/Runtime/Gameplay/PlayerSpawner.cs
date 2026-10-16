@@ -13,12 +13,16 @@ namespace Game.Gameplay
     /// </summary>
     public sealed class PlayerSpawner : MonoBehaviour
     {
+        /// <summary>Префаб игрока (если игрока нет в сцене).</summary>
         [SerializeField] private PlayerCharacter playerPrefab;
+        /// <summary>Точка появления. Пусто — позиция спавнера.</summary>
         [SerializeField] private Transform spawnPoint;
+        /// <summary>Задержка возрождения после смерти, сек.</summary>
         [SerializeField] private float respawnDelay = 3f;
 
         private PlayerCharacter _player;
 
+        /// <summary>Текущий игрок.</summary>
         public PlayerCharacter Player => _player;
 
         /// <summary>Настройка из кода. Вызывать до активации объекта.</summary>

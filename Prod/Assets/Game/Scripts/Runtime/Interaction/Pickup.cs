@@ -11,9 +11,13 @@ namespace Game.Interaction
     [RequireComponent(typeof(Collider))]
     public abstract class Pickup : MonoBehaviour
     {
+        /// <summary>Через сколько секунд предмет появляется снова.</summary>
         [SerializeField] private float respawnTime = 10f;
+        /// <summary>Визуал, который вращается и прячется после подбора.</summary>
         [SerializeField] private Transform visual;
+        /// <summary>Скорость вращения, градусов в секунду.</summary>
         [SerializeField] private float spinSpeed = 90f;
+        /// <summary>Амплитуда покачивания вверх-вниз, м.</summary>
         [SerializeField] private float bobHeight = 0.15f;
 
         private Collider _trigger;

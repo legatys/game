@@ -16,6 +16,7 @@ namespace Game.EditorTools
     /// </summary>
     internal static class DemoSceneBuilder
     {
+        /// <summary>Создаёт новую сцену Demo из префабов, сохраняет её и ставит первой в Build Settings.</summary>
         public static Scene Build(DemoPrefabs prefabs, CameraConfig cameraConfig)
         {
             var scene = EditorSceneManager.NewScene(NewSceneSetup.DefaultGameObjects, NewSceneMode.Single);

@@ -10,6 +10,7 @@ namespace Game.EditorTools
     [CustomEditor(typeof(AnimationSet))]
     internal sealed class AnimationSetEditor : UnityEditor.Editor
     {
+        /// <summary>Рисует инспектор: подсказку по Mixamo, поля набора, отчёт о заменах и кнопку пересборки.</summary>
         public override void OnInspectorGUI()
         {
             EditorGUILayout.HelpBox(

@@ -12,11 +12,17 @@ namespace Game.Animations
     [RequireComponent(typeof(Animator))]
     public sealed class AimIKHandler : MonoBehaviour
     {
+        /// <summary>Вес взгляда в прицел, когда персонаж целится или стреляет.</summary>
         [SerializeField, Range(0f, 1f)] private float combatWeight = 1f;
+        /// <summary>Вес взгляда вне боя (голова следит за камерой).</summary>
         [SerializeField, Range(0f, 1f)] private float idleWeight = 0.4f;
+        /// <summary>Насколько поворачивается корпус.</summary>
         [SerializeField, Range(0f, 1f)] private float bodyWeight = 0.35f;
+        /// <summary>Насколько поворачивается голова.</summary>
         [SerializeField, Range(0f, 1f)] private float headWeight = 0.9f;
+        /// <summary>Ограничение угла поворота (0 — без ограничений, 1 — не поворачивать).</summary>
         [SerializeField, Range(0f, 1f)] private float clampWeight = 0.5f;
+        /// <summary>Скорость изменения веса IK в секунду.</summary>
         [SerializeField] private float blendSpeed = 4f;
 
         private Animator _animator;

@@ -10,11 +10,13 @@ namespace Game.EditorTools
     [InitializeOnLoad]
     internal static class PlaygroundSceneOpener
     {
+        /// <summary>Путь к сцене Playground.</summary>
         public const string ScenePath = "Assets/Game/Scenes/Playground.unity";
         private const string SessionKey = "Game.PlaygroundSceneOpener.Done";
 
         static PlaygroundSceneOpener() => EditorApplication.delayCall += OpenIfUntitled;
 
+        /// <summary>Пункт меню Tools → TPS Skeleton → Open Playground Scene.</summary>
         [MenuItem("Tools/TPS Skeleton/Open Playground Scene", priority = -10)]
         public static void Open()
         {

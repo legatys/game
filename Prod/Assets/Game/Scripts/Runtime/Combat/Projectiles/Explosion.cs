@@ -11,6 +11,7 @@ namespace Game.Combat
         private static readonly HashSet<Transform> Damaged = new HashSet<Transform>();
         private static readonly HashSet<Rigidbody> Pushed = new HashSet<Rigidbody>();
 
+        /// <summary>Наносит урон всем IDamageable в радиусе (с затуханием к краю), толкает физические тела и публикует ExplosionEvent.</summary>
         public static void Detonate(Vector3 center, float radius, float damage, float force, GameObject instigator)
         {
             if (radius <= 0f) return;

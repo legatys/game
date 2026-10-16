@@ -13,6 +13,7 @@ namespace Game.Cameras
     [RequireComponent(typeof(UnityEngine.Camera))]
     public sealed class ThirdPersonCamera : MonoBehaviour, ICameraRig
     {
+        /// <summary>Настройки камеры. Пусто — значения по умолчанию.</summary>
         [SerializeField] private CameraConfig config;
 
         private UnityEngine.Camera _camera;
@@ -31,7 +32,9 @@ namespace Game.Cameras
         private Vector2 _pendingRecoil; // отдача, которую ещё нужно "докинуть"
 
         public UnityEngine.Camera Camera => _camera;
+        /// <inheritdoc />
         public Quaternion YawRotation => Quaternion.Euler(0f, _yaw, 0f);
+        /// <inheritdoc />
         public Vector3 Forward => transform.forward;
 
         private void Awake()
@@ -55,6 +58,7 @@ namespace Game.Cameras
         /// <summary>Настройка из кода. Вызывать до активации объекта (до Awake).</summary>
         public void Configure(CameraConfig cameraConfig) => config = cameraConfig;
 
+        /// <inheritdoc />
         public void SetTarget(ICameraTarget target)
         {
             _target = target;
@@ -65,8 +69,10 @@ namespace Game.Cameras
             _yaw = target.Root.eulerAngles.y;
         }
 
+        /// <inheritdoc />
         public void AddRecoil(float pitchDegrees, float yawDegrees) => _pendingRecoil += new Vector2(pitchDegrees, yawDegrees);
 
+        /// <inheritdoc />
         public Vector3 GetAimPoint(float maxDistance, Transform ignoreRoot)
         {
             var ray = new Ray(transform.position, transform.forward);

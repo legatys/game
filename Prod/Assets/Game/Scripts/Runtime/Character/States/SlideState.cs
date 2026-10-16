@@ -12,12 +12,16 @@ namespace Game.Character.States
         private float _speed;
         private float _timer;
 
+        /// <summary>Создаёт состояние для игрока <paramref name="player"/>.</summary>
         public SlideState(PlayerCharacter player) : base(player) { }
 
+        /// <inheritdoc />
         public override string Name => "Slide";
 
+        /// <summary>Подкат закончился (время вышло или скорость упала).</summary>
         public bool IsFinished => _timer >= Config.slideMaxDuration || _speed <= Config.crouchSpeed;
 
+        /// <summary>Рывок по направлению бега, капсула опускается.</summary>
         public override void Enter()
         {
             var planar = Motor.PlanarVelocity;
@@ -27,8 +31,10 @@ namespace Game.Character.States
             Motor.SetTargetHeight(Config.crouchHeight, Config.heightChangeSpeed * 2f);
         }
 
+        /// <summary>Запускает паузу между подкатами.</summary>
         public override void Exit() => Player.StartSlideCooldown();
 
+        /// <summary>Торможение и лёгкое подруливание.</summary>
         protected override void OnTick(float deltaTime)
         {
             _timer += deltaTime;

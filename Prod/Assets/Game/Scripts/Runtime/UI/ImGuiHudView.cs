@@ -8,9 +8,13 @@ namespace Game.UI
     /// </summary>
     public sealed class ImGuiHudView : MonoBehaviour, IHudView
     {
+        /// <summary>Показывать подсказку по управлению.</summary>
         [SerializeField] private bool showControlsHelp = true;
+        /// <summary>Цвет прицела.</summary>
         [SerializeField] private Color crosshairColor = new Color(1f, 1f, 1f, 0.9f);
+        /// <summary>Цвет хит-маркера.</summary>
         [SerializeField] private Color hitColor = Color.white;
+        /// <summary>Цвет хит-маркера при убийстве.</summary>
         [SerializeField] private Color killColor = new Color(1f, 0.25f, 0.2f);
 
         private const string ControlsHelp =
@@ -34,12 +38,14 @@ namespace Game.UI
 
         private GUIStyle _bigLabel, _smallLabel, _centerLabel;
 
+        /// <inheritdoc />
         public void SetHealth(float current, float max)
         {
             _health = current;
             _maxHealth = Mathf.Max(1f, max);
         }
 
+        /// <inheritdoc />
         public void SetWeapon(string weaponName, int magazine, int magazineSize, int reserve)
         {
             _weaponName = weaponName;
@@ -48,18 +54,21 @@ namespace Game.UI
             _reserve = reserve;
         }
 
+        /// <inheritdoc />
         public void SetReload(bool reloading, float progress01)
         {
             _reloading = reloading;
             _reloadProgress = progress01;
         }
 
+        /// <inheritdoc />
         public void SetCrosshair(float spreadPixels, bool aiming)
         {
             _spreadPixels = spreadPixels;
             _aiming = aiming;
         }
 
+        /// <inheritdoc />
         public void ShowHitMarker(bool killed, bool critical)
         {
             _hitTimer = killed ? 0.35f : 0.15f;
@@ -67,8 +76,11 @@ namespace Game.UI
             _hitCritical = critical;
         }
 
+        /// <inheritdoc />
         public void ShowDamageFlash(float strength01) => _damageFlash = Mathf.Max(_damageFlash, strength01);
+        /// <inheritdoc />
         public void SetRespawnCountdown(float seconds) => _respawnSeconds = seconds;
+        /// <inheritdoc />
         public void SetDebugText(string text) => _debugText = text ?? string.Empty;
 
         private void Update()

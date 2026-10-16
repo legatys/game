@@ -12,6 +12,7 @@ namespace Game.EditorTools
     /// </summary>
     internal static class WeaponContentBuilder
     {
+        /// <summary>Создаёт эффекты, модели и определения оружия; возвращает набор оружия демо.</summary>
         public static DemoWeapons Build(bool overwritePrefabs)
         {
             var materials = AssetMaterialProvider.Instance;

@@ -12,6 +12,7 @@ namespace Game.EditorTools
     /// </summary>
     internal static class PrefabContentBuilder
     {
+        /// <summary>Загружает или создаёт префабы демо (при <paramref name="overwrite"/> — пересоздаёт).</summary>
         public static DemoPrefabs Build(MovementConfig movement, AnimationSet animationSet, DemoWeapons weapons, bool overwrite)
         {
             var materials = AssetMaterialProvider.Instance;

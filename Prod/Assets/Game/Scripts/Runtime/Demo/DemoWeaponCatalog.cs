@@ -7,9 +7,12 @@ namespace Game.Demo
     /// <summary>Набор оружия демо: стартовое оружие игрока и оружие турели.</summary>
     public sealed class DemoWeapons
     {
+        /// <summary>Определения оружия демо.</summary>
         public WeaponDefinition Pistol, Rifle, Shotgun, Launcher, TurretRifle;
 
+        /// <summary>Стартовое оружие игрока (4 слота).</summary>
         public WeaponDefinition[] PlayerLoadout => new[] { Pistol, Rifle, Shotgun, Launcher };
+        /// <summary>Всё оружие, включая турельное.</summary>
         public WeaponDefinition[] All => new[] { Pistol, Rifle, Shotgun, Launcher, TurretRifle };
     }
 
@@ -19,10 +22,15 @@ namespace Game.Demo
     /// </summary>
     public static class DemoWeaponCatalog
     {
+        /// <summary>Имя пистолета.</summary>
         public const string Pistol = "Pistol";
+        /// <summary>Имя автомата.</summary>
         public const string Rifle = "Rifle";
+        /// <summary>Имя дробовика.</summary>
         public const string Shotgun = "Shotgun";
+        /// <summary>Имя гранатомёта.</summary>
         public const string Launcher = "Launcher";
+        /// <summary>Имя оружия турели.</summary>
         public const string TurretRifle = "TurretRifle";
 
         /// <summary>Размеры модели: корпус, радиус и длина ствола.</summary>
@@ -37,6 +45,7 @@ namespace Game.Demo
             }
         }
 
+        /// <summary>Функция, заполняющая WeaponDefinition параметрами оружия <paramref name="weapon"/>.</summary>
         public static Action<WeaponDefinition> Setup(string weapon)
         {
             switch (weapon)
@@ -71,6 +80,7 @@ namespace Game.Demo
             };
         }
 
+        /// <summary>Пистолет: полуавтомат, луч.</summary>
         public static void ConfigurePistol(WeaponDefinition d)
         {
             d.displayName = "Pistol"; d.fireMode = FireModeType.SemiAuto; d.shotType = ShotType.Hitscan;
@@ -80,6 +90,7 @@ namespace Game.Demo
             d.recoilPitch = 1.4f; d.recoilYaw = 0.4f;
         }
 
+        /// <summary>Автомат: автоматический огонь, луч.</summary>
         public static void ConfigureRifle(WeaponDefinition d)
         {
             d.displayName = "Assault Rifle"; d.fireMode = FireModeType.FullAuto; d.shotType = ShotType.Hitscan;
@@ -89,6 +100,7 @@ namespace Game.Demo
             d.recoilPitch = 0.7f; d.recoilYaw = 0.35f;
         }
 
+        /// <summary>Дробовик: полуавтомат, 9 дробинок.</summary>
         public static void ConfigureShotgun(WeaponDefinition d)
         {
             d.displayName = "Shotgun"; d.fireMode = FireModeType.SemiAuto; d.shotType = ShotType.Spread;
@@ -98,6 +110,7 @@ namespace Game.Demo
             d.recoilPitch = 3.5f; d.recoilYaw = 1f; d.impactForce = 2f;
         }
 
+        /// <summary>Гранатомёт: снаряд с взрывом.</summary>
         public static void ConfigureLauncher(WeaponDefinition d)
         {
             d.displayName = "Grenade Launcher"; d.fireMode = FireModeType.SemiAuto; d.shotType = ShotType.Projectile;
@@ -106,6 +119,7 @@ namespace Game.Demo
             d.hipSpread = 1f; d.aimSpread = 0.3f; d.spreadPerShot = 0f; d.recoilPitch = 4f; d.recoilYaw = 0.5f;
         }
 
+        /// <summary>Оружие турели: очереди по 4 выстрела.</summary>
         public static void ConfigureTurretRifle(WeaponDefinition d)
         {
             d.displayName = "Turret Rifle"; d.fireMode = FireModeType.Burst; d.burstCount = 4; d.burstCooldown = 0.35f;

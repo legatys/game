@@ -6,7 +6,9 @@ namespace Game.Core
     /// <summary>Компонент на пулируемом объекте получает уведомления о выдаче/возврате в пул.</summary>
     public interface IPoolable
     {
+        /// <summary>Объект выдан из пула (сброс состояния).</summary>
         void OnSpawned();
+        /// <summary>Объект возвращён в пул.</summary>
         void OnDespawned();
     }
 
@@ -20,12 +22,14 @@ namespace Game.Core
         private readonly Transform _root;
         private readonly Stack<PooledObject> _inactive = new Stack<PooledObject>();
 
+        /// <summary>Создаёт пул префаба <paramref name="prefab"/>; экземпляры хранятся внутри <paramref name="root"/>.</summary>
         public GameObjectPool(GameObject prefab, Transform root)
         {
             _prefab = prefab;
             _root = root;
         }
 
+        /// <summary>Выдать объект (новый или из запаса) в позиции и повороте.</summary>
         public PooledObject Get(Vector3 position, Quaternion rotation)
         {
             PooledObject item = null;
@@ -40,6 +44,7 @@ namespace Game.Core
             return item;
         }
 
+        /// <summary>Вернуть объект в пул.</summary>
         public void Release(PooledObject item)
         {
             if (item == null || !item.gameObject.activeSelf) return;
@@ -50,6 +55,7 @@ namespace Game.Core
             _inactive.Push(item);
         }
 
+        /// <summary>Заранее создать <paramref name="count"/> неактивных экземпляров.</summary>
         public void Prewarm(int count)
         {
             for (var i = 0; i < count; i++)
@@ -79,14 +85,17 @@ namespace Game.Core
         private readonly Dictionary<GameObject, GameObjectPool> _pools = new Dictionary<GameObject, GameObjectPool>();
         private readonly Transform _root;
 
+        /// <summary>Создаёт сервис; пулы хранят объекты внутри <paramref name="root"/>.</summary>
         public PoolService(Transform root) => _root = root;
 
+        /// <summary>Выдать экземпляр префаба из его пула.</summary>
         public GameObject Spawn(GameObject prefab, Vector3 position, Quaternion rotation)
         {
             if (prefab == null) return null;
             return GetPool(prefab).Get(position, rotation).gameObject;
         }
 
+        /// <summary>Выдать экземпляр и вернуть его компонент T.</summary>
         public T Spawn<T>(T prefab, Vector3 position, Quaternion rotation) where T : Component
         {
             if (prefab == null) return null;
@@ -94,11 +103,13 @@ namespace Game.Core
             return instance.GetComponent<T>();
         }
 
+        /// <summary>Заранее создать экземпляры префаба.</summary>
         public void Prewarm(GameObject prefab, int count)
         {
             if (prefab != null) GetPool(prefab).Prewarm(count);
         }
 
+        /// <summary>Вернуть экземпляр в пул (или уничтожить, если он не из пула).</summary>
         public static void Release(GameObject instance)
         {
             if (instance == null) return;

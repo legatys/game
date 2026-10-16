@@ -15,6 +15,7 @@ namespace Game.UI
     {
         [Tooltip("Урон, при котором красная вспышка экрана максимальна")]
         [SerializeField] private float fullFlashDamage = 40f;
+        /// <summary>Показывать состояние и скорость игрока.</summary>
         [SerializeField] private bool showDebugInfo = true;
 
         private IHudView _view;

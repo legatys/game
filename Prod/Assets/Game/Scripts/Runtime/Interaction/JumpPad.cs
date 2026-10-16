@@ -15,6 +15,7 @@ namespace Game.Interaction
 
         private void Awake() => GetComponent<Collider>().isTrigger = true;
 
+        /// <summary>Задаёт скорость запуска. Вызывать до активации объекта.</summary>
         public void Configure(Vector3 localLaunchVelocity) => launchVelocity = localLaunchVelocity;
 
         private void OnTriggerEnter(Collider other)

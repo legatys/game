@@ -13,6 +13,7 @@ namespace Game.Demo
     /// <summary>Шаблоны (префабы или неактивные объекты-образцы) для расстановки по уровню.</summary>
     public sealed class DemoPrefabs
     {
+        /// <summary>Шаблоны объектов демо.</summary>
         public GameObject Player, Dummy, Turret, HealthPickup, AmmoPickup, JumpPad;
     }
 
@@ -27,6 +28,7 @@ namespace Game.Demo
     {
         // ---------- Эффекты ----------
 
+        /// <summary>Трассер на LineRenderer.</summary>
         public static GameObject BuildTracer(IMaterialProvider materials, Transform parent = null)
         {
             var root = Root("Tracer", parent);
@@ -41,6 +43,7 @@ namespace Game.Demo
             return root;
         }
 
+        /// <summary>Искра попадания (куб, уменьшающийся до нуля).</summary>
         public static GameObject BuildImpact(IMaterialProvider materials, Transform parent = null)
         {
             var root = Root("Impact", parent);
@@ -50,6 +53,7 @@ namespace Game.Demo
             return root;
         }
 
+        /// <summary>Взрыв: растущая сфера и гаснущий свет.</summary>
         public static GameObject BuildExplosion(IMaterialProvider materials, Transform parent = null)
         {
             var root = Root("Explosion", parent);
@@ -64,6 +68,7 @@ namespace Game.Demo
             return root;
         }
 
+        /// <summary>Граната со следом; при попадании создаёт <paramref name="explosion"/>.</summary>
         public static GameObject BuildGrenade(IMaterialProvider materials, GameObject explosion, Transform parent = null)
         {
             var root = Root("Grenade", parent);
@@ -134,7 +139,13 @@ namespace Game.Demo
 
         // ---------- Игрок ----------
 
+        /// <summary>Игрок: CharacterController, все компоненты, манекен с Animator и сокетом оружия.</summary>
+        /// <param name="movement">Настройки передвижения (рост капсулы и т.д.); null — значения по умолчанию.</param>
+        /// <param name="animationSet">Набор анимаций; его контроллер ставится в Animator.</param>
+        /// <param name="loadout">Стартовое оружие.</param>
+        /// <param name="materials">Источник материалов.</param>
         /// <param name="avatarProvider">Как получить Avatar для модели (в редакторе — ассет, в игре — построить на лету).</param>
+        /// <param name="parent">Родитель; неактивный родитель откладывает Awake компонентов.</param>
         public static GameObject BuildPlayer(MovementConfig movement, AnimationSet animationSet, WeaponDefinition[] loadout,
             IMaterialProvider materials, Func<GameObject, Avatar> avatarProvider, Transform parent = null)
         {
@@ -186,6 +197,7 @@ namespace Game.Demo
 
         // ---------- Мишень и турель ----------
 
+        /// <summary>Мишень с хитбоксом головы (×2 урона).</summary>
         public static GameObject BuildDummy(IMaterialProvider materials, Transform parent = null)
         {
             var root = Root("TargetDummy", parent);
@@ -202,6 +214,7 @@ namespace Game.Demo
             return root;
         }
 
+        /// <summary>Турель с оружием <paramref name="weapon"/>.</summary>
         public static GameObject BuildTurret(IMaterialProvider materials, WeaponDefinition weapon, Transform parent = null)
         {
             var root = Root("EnemyTurret", parent);
@@ -222,12 +235,15 @@ namespace Game.Demo
 
         // ---------- Предметы и батут ----------
 
+        /// <summary>Аптечка.</summary>
         public static GameObject BuildHealthPickup(IMaterialProvider materials, Transform parent = null) =>
             BuildPickup<HealthPickup>("HealthPickup", materials.Emissive("HealthPickup", new Color(0.2f, 0.9f, 0.3f), 1.5f), parent);
 
+        /// <summary>Патроны.</summary>
         public static GameObject BuildAmmoPickup(IMaterialProvider materials, Transform parent = null) =>
             BuildPickup<AmmoPickup>("AmmoPickup", materials.Emissive("AmmoPickup", new Color(1f, 0.8f, 0.2f), 1.5f), parent);
 
+        /// <summary>Батут.</summary>
         public static GameObject BuildJumpPad(IMaterialProvider materials, Transform parent = null)
         {
             var root = Root("JumpPad", parent);

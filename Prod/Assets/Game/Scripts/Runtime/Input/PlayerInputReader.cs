@@ -12,6 +12,7 @@ namespace Game.Inputs
     [DefaultExecutionOrder(-100)]
     public sealed class PlayerInputReader : MonoBehaviour, IPlayerInput
     {
+        /// <summary>Ассет действий. Пусто — project-wide InputSystem.actions.</summary>
         [SerializeField] private InputActionAsset actions;
 
         private InputAction _move, _look, _jump, _sprint, _crouch, _attack, _aim, _reload, _interact;
@@ -19,32 +20,50 @@ namespace Game.Inputs
         private InputAction[] _weaponSlots;
         private bool _gameplayEnabled = true;
 
+        /// <inheritdoc />
         public bool GameplayEnabled
         {
             get => _gameplayEnabled;
             set => _gameplayEnabled = value;
         }
 
+        /// <inheritdoc />
         public Vector2 Move => Gameplay ? Read(_move) : Vector2.zero;
+        /// <inheritdoc />
         public Vector2 Look => Gameplay ? Read(_look) : Vector2.zero;
+        /// <inheritdoc />
         public bool LookIsDelta => _look?.activeControl == null || _look.activeControl.device is Pointer;
 
+        /// <inheritdoc />
         public bool JumpPressed => Gameplay && Pressed(_jump);
+        /// <inheritdoc />
         public bool SprintHeld => Gameplay && Held(_sprint);
+        /// <inheritdoc />
         public bool CrouchPressed => Gameplay && Pressed(_crouch);
+        /// <inheritdoc />
         public bool CrouchHeld => Gameplay && Held(_crouch);
 
+        /// <inheritdoc />
         public bool FirePressed => Gameplay && Pressed(_attack);
+        /// <inheritdoc />
         public bool FireHeld => Gameplay && Held(_attack);
+        /// <inheritdoc />
         public bool AimHeld => Gameplay && Held(_aim);
+        /// <inheritdoc />
         public bool ReloadPressed => Gameplay && Pressed(_reload);
+        /// <inheritdoc />
         public bool InteractPressed => Gameplay && Pressed(_interact);
 
+        /// <inheritdoc />
         public bool NextWeaponPressed => Gameplay && Pressed(_next);
+        /// <inheritdoc />
         public bool PreviousWeaponPressed => Gameplay && Pressed(_previous);
+        /// <inheritdoc />
         public bool SwitchShoulderPressed => Gameplay && Pressed(_switchShoulder);
+        /// <inheritdoc />
         public bool PausePressed => Pressed(_pause);
 
+        /// <inheritdoc />
         public int WeaponSlotPressed
         {
             get

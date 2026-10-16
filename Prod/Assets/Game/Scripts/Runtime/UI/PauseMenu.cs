@@ -14,6 +14,7 @@ namespace Game.UI
         private IPlayerInput _input;
         private bool _paused;
 
+        /// <summary>Включена ли пауза.</summary>
         public bool IsPaused => _paused;
 
         private void Start() => SetCursorLocked(true);
@@ -33,6 +34,7 @@ namespace Game.UI
             if (!_paused && Cursor.lockState != CursorLockMode.Locked && _input.FirePressed) SetCursorLocked(true);
         }
 
+        /// <summary>Включить/выключить паузу.</summary>
         public void SetPaused(bool paused)
         {
             _paused = paused;

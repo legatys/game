@@ -9,6 +9,7 @@ namespace Game.EditorTools
     /// <summary>Общие операции генератора: папки, ScriptableObject-ы, префабы.</summary>
     internal static class EditorAssetUtility
     {
+        /// <summary>Создаёт папку проекта (и все родительские), если её нет.</summary>
         public static void EnsureFolder(string path)
         {
             if (AssetDatabase.IsValidFolder(path)) return;
@@ -31,6 +32,7 @@ namespace Game.EditorTools
             return asset;
         }
 
+        /// <summary>Есть ли ассет по пути.</summary>
         public static bool Exists(string path) => AssetDatabase.LoadMainAssetAtPath(path) != null;
 
         /// <summary>Сохраняет объект сцены как префаб (перезаписывая, GUID сохраняется) и удаляет временный объект.</summary>

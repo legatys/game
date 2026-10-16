@@ -18,6 +18,7 @@ namespace Game.Character
     [RequireComponent(typeof(CharacterMotor), typeof(Health))]
     public sealed class PlayerCharacter : MonoBehaviour, ICameraTarget
     {
+        /// <summary>Настройки передвижения.</summary>
         [SerializeField] private MovementConfig config;
         [Tooltip("Высота точки вращения камеры в долях роста капсулы")]
         [SerializeField] private float cameraPivotHeight = 0.9f;
@@ -35,30 +36,51 @@ namespace Game.Character
         private float _slideCooldown;
         private ICameraRig _cameraRig;
 
+        /// <summary>Настройки передвижения.</summary>
         public MovementConfig Config => config;
+        /// <summary>Мотор перемещения.</summary>
         public CharacterMotor Motor { get; private set; }
+        /// <summary>Здоровье.</summary>
         public Health Health { get; private set; }
+        /// <summary>Боевая часть (может отсутствовать у NPC).</summary>
         public PlayerCombat Combat { get; private set; }
+        /// <summary>Оружие игрока.</summary>
         public WeaponInventory Inventory { get; private set; }
+        /// <summary>Источник ввода.</summary>
         public IPlayerInput Input { get; private set; }
 
+        /// <summary>Текущее состояние движения.</summary>
         public IState CurrentState => _stateMachine?.Current;
+        /// <summary>Имя текущего состояния (для HUD).</summary>
         public string CurrentStateName => CurrentState?.Name ?? "-";
+        /// <summary>Спринт в этом кадре.</summary>
         public bool IsSprinting { get; private set; }
+        /// <summary>Подкат.</summary>
         public bool IsSliding => CurrentState == _slide;
+        /// <summary>Присед или подкат.</summary>
         public bool IsCrouching => CurrentState == _crouch || IsSliding;
+        /// <summary>Персонаж мёртв.</summary>
         public bool IsDead => Health != null && !Health.IsAlive;
+        /// <summary>Прицеливается.</summary>
         public bool IsAiming => Combat != null && Combat.IsAiming;
+        /// <summary>Должен смотреть в сторону камеры (прицел или недавний выстрел).</summary>
         public bool WantsCombatFacing => Combat != null && Combat.WantsCombatFacing;
+        /// <summary>Сколько прыжков в воздухе осталось.</summary>
         public int AirJumpsRemaining { get; set; }
+        /// <summary>Есть запомненное нажатие прыжка (буфер).</summary>
         public bool HasJumpRequest => _jumpBuffer > 0f;
 
         // ICameraTarget
+        /// <inheritdoc />
         public Transform Root => transform;
+        /// <inheritdoc />
         public Vector3 PivotPosition => transform.position + Vector3.up * (Motor.Height * cameraPivotHeight);
 
+        /// <summary>Персонаж прыгнул (с земли или в воздухе).</summary>
         public event Action Jumped;
+        /// <summary>Приземлился; параметр — вертикальная скорость удара.</summary>
         public event Action<float> Landed;
+        /// <summary>Персонаж возрождён.</summary>
         public event Action Respawned;
         /// <summary>(предыдущее, новое) состояние движения.</summary>
         public event Action<IState, IState> StateChanged;
@@ -161,6 +183,7 @@ namespace Game.Character
             return Vector3.ClampMagnitude(yaw * new Vector3(move.x, 0f, move.y), 1f);
         }
 
+        /// <summary>Целевая скорость на земле: шаг при прицеливании, спринт или бег.</summary>
         public float GetGroundSpeed()
         {
             if (IsAiming) return config.walkSpeed;
@@ -176,6 +199,7 @@ namespace Game.Character
                 Motor.RotateTowards(moveDirection, config.rotationSpeed, deltaTime);
         }
 
+        /// <summary>Использовать запомненное нажатие прыжка.</summary>
         public bool TryConsumeJumpRequest()
         {
             if (!HasJumpRequest) return false;
@@ -183,13 +207,16 @@ namespace Game.Character
             return true;
         }
 
+        /// <summary>Прыгнуть на MovementConfig.jumpHeight и вызвать Jumped.</summary>
         public void PerformJump()
         {
             Motor.Jump(config.jumpHeight, config.gravity);
             Jumped?.Invoke();
         }
 
+        /// <summary>Восстановить прыжки в воздухе.</summary>
         public void RefillAirJumps() => AirJumpsRemaining = config.maxAirJumps;
+        /// <summary>Запустить паузу между подкатами.</summary>
         public void StartSlideCooldown() => _slideCooldown = config.slideCooldown;
 
         // ---------- Публичный API для других систем ----------
@@ -201,6 +228,7 @@ namespace Game.Character
             if (refillAirJumps) RefillAirJumps();
         }
 
+        /// <summary>Телепортировать, восстановить здоровье и вернуть в состояние Grounded.</summary>
         public void Respawn(Vector3 position, Quaternion rotation)
         {
             Motor.Teleport(position, rotation);

@@ -7,7 +7,9 @@ namespace Game.Combat
     [RequireComponent(typeof(LineRenderer))]
     public sealed class Tracer : MonoBehaviour, IPoolable
     {
+        /// <summary>Сколько секунд виден трассер.</summary>
         [SerializeField] private float lifetime = 0.06f;
+        /// <summary>Начальная толщина линии.</summary>
         [SerializeField] private float width = 0.03f;
 
         private LineRenderer _line;
@@ -20,6 +22,7 @@ namespace Game.Combat
             _line.useWorldSpace = true;
         }
 
+        /// <summary>Рисует линию от <paramref name="from"/> до <paramref name="to"/>.</summary>
         public void Show(Vector3 from, Vector3 to)
         {
             _line.SetPosition(0, from);
@@ -28,7 +31,9 @@ namespace Game.Combat
             SetWidth(width);
         }
 
+        /// <inheritdoc />
         public void OnSpawned() => _age = 0f;
+        /// <inheritdoc />
         public void OnDespawned() { }
 
         private void Update()

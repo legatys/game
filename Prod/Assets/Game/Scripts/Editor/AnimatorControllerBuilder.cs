@@ -16,8 +16,10 @@ namespace Game.EditorTools
         private readonly AnimationSet _set;
         private AnimatorController _controller;
 
+        /// <summary>Создаёт строитель для набора анимаций <paramref name="set"/>.</summary>
         public AnimatorControllerBuilder(AnimationSet set) => _set = set;
 
+        /// <summary>Пересоздаёт контроллер по пути <paramref name="path"/>, записывает ссылку в AnimationSet.controller и возвращает его.</summary>
         public AnimatorController Build(string path, AvatarMask upperBodyMask)
         {
             // Пересоздаём с нуля, а ссылку храним в AnimationSet.controller — она обновляется здесь же.

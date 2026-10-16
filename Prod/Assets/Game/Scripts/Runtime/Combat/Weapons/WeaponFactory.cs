@@ -13,6 +13,7 @@ namespace Game.Combat.Weapons
         private static readonly IShotStrategy Spread = new SpreadShot();
         private static readonly IShotStrategy Projectile = new ProjectileShot();
 
+        /// <summary>Создаёт модель оружия внутри <paramref name="parent"/> и оружие с подходящими стратегиями.</summary>
         public static Weapon Create(WeaponDefinition definition, Transform parent)
         {
             var view = definition.viewPrefab != null
@@ -25,6 +26,7 @@ namespace Game.Combat.Weapons
             return new Weapon(definition, view, CreateFireMode(definition), CreateShot(definition));
         }
 
+        /// <summary>Стратегия режима огня по полю fireMode.</summary>
         public static IFireMode CreateFireMode(WeaponDefinition definition)
         {
             switch (definition.fireMode)
@@ -35,6 +37,7 @@ namespace Game.Combat.Weapons
             }
         }
 
+        /// <summary>Стратегия выстрела по полю shotType (общие экземпляры).</summary>
         public static IShotStrategy CreateShot(WeaponDefinition definition)
         {
             switch (definition.shotType)

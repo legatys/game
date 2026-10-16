@@ -12,6 +12,7 @@ namespace Game.Demo
     /// </summary>
     public sealed class MannequinBuilder
     {
+        /// <summary>Префикс имён костей Mixamo.</summary>
         public const string BonePrefix = "mixamorig:";
 
         private readonly struct Bone
@@ -71,6 +72,7 @@ namespace Game.Demo
         private Material _accent;
         private Dictionary<string, Transform> _bones;
 
+        /// <summary>Задаёт материалы тела, суставов и акцентов.</summary>
         public MannequinBuilder WithMaterials(Material body, Material joints, Material accent)
         {
             _body = body;
@@ -98,6 +100,7 @@ namespace Game.Demo
             return root;
         }
 
+        /// <summary>Кость по короткому имени без префикса (например, "Spine2").</summary>
         public Transform GetBone(string shortName) => _bones != null && _bones.TryGetValue(shortName, out var bone) ? bone : null;
 
         /// <summary>

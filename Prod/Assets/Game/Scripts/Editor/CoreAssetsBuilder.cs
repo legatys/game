@@ -11,7 +11,9 @@ namespace Game.EditorTools
     /// <summary>Конфиги, AnimationSet (с клипами Mixamo из Assets/Models), Avatar манекена и Animator Controller.</summary>
     internal static class CoreAssetsBuilder
     {
+        /// <summary>Загружает или создаёт Generated/Configs/MovementConfig.asset.</summary>
         public static MovementConfig LoadMovementConfig() => EditorAssetUtility.LoadOrCreate<MovementConfig>(SkeletonPaths.MovementConfig);
+        /// <summary>Загружает или создаёт Generated/Configs/CameraConfig.asset.</summary>
         public static CameraConfig LoadCameraConfig() => EditorAssetUtility.LoadOrCreate<CameraConfig>(SkeletonPaths.CameraConfig);
 
         /// <summary>Создаёт AnimationSet. При первом создании подставляет Idle и Jogging из исходного проекта.</summary>
@@ -28,6 +30,7 @@ namespace Game.EditorTools
             });
         }
 
+        /// <summary>Пересобирает Animator Controller из набора и обновляет ссылку в префабе игрока.</summary>
         public static AnimatorController BuildAnimator(AnimationSet set)
         {
             var mask = AnimatorControllerBuilder.LoadOrCreateUpperBodyMask(SkeletonPaths.UpperBodyMask);

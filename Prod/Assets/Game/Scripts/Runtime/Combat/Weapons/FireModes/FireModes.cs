@@ -6,6 +6,7 @@ namespace Game.Combat.Weapons
     /// </summary>
     public interface IFireMode
     {
+        /// <summary>Решает, стрелять ли в этом кадре, и вызывает weapon.TryFire().</summary>
         void Tick(Weapon weapon, bool triggerPressed, bool triggerHeld, in AimData aim, float deltaTime);
         void Reset();
     }
@@ -16,6 +17,7 @@ namespace Game.Combat.Weapons
         private const float QueueTime = 0.15f;
         private float _queued;
 
+        /// <inheritdoc />
         public void Tick(Weapon weapon, bool triggerPressed, bool triggerHeld, in AimData aim, float deltaTime)
         {
             if (triggerPressed) _queued = QueueTime;
@@ -37,6 +39,7 @@ namespace Game.Combat.Weapons
     {
         private bool _dryFired;
 
+        /// <inheritdoc />
         public void Tick(Weapon weapon, bool triggerPressed, bool triggerHeld, in AimData aim, float deltaTime)
         {
             if (!triggerHeld)
@@ -63,12 +66,14 @@ namespace Game.Combat.Weapons
         private int _shotsLeft;
         private float _cooldown;
 
+        /// <summary>Создаёт режим очереди из <paramref name="burstCount"/> выстрелов с паузой <paramref name="burstCooldown"/>.</summary>
         public BurstFireMode(int burstCount, float burstCooldown)
         {
             _burstCount = burstCount < 1 ? 1 : burstCount;
             _burstCooldown = burstCooldown;
         }
 
+        /// <inheritdoc />
         public void Tick(Weapon weapon, bool triggerPressed, bool triggerHeld, in AimData aim, float deltaTime)
         {
             _cooldown -= deltaTime;

@@ -7,6 +7,7 @@ namespace Game.Combat.Weapons
     {
         /// <summary>Персонаж целится или стреляет — оружие и голова смотрят в точку прицела.</summary>
         bool IsCombatReady { get; }
+        /// <summary>Точка в мире под прицелом.</summary>
         Vector3 AimPoint { get; }
     }
 
@@ -18,7 +19,9 @@ namespace Game.Combat.Weapons
     [DefaultExecutionOrder(200)]
     public sealed class WeaponSocket : MonoBehaviour
     {
+        /// <summary>Поворот оружия вне боя относительно персонажа.</summary>
         [SerializeField] private Vector3 restEulerAngles = new Vector3(35f, -20f, 0f);
+        /// <summary>Резкость поворота к цели (больше — быстрее).</summary>
         [SerializeField] private float rotationSharpness = 25f;
 
         private IAimProvider _aim;

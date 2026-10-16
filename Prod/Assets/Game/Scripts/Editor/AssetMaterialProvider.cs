@@ -11,17 +11,22 @@ namespace Game.EditorTools
     /// </summary>
     internal sealed class AssetMaterialProvider : IMaterialProvider
     {
+        /// <summary>Единственный экземпляр (провайдер без состояния).</summary>
         public static readonly AssetMaterialProvider Instance = new AssetMaterialProvider();
 
+        /// <inheritdoc />
         public Material Lit(string name, Color color, float smoothness = 0.25f) =>
             LoadOrCreate(name, () => MaterialFactory.CreateLit(name, color, smoothness));
 
+        /// <inheritdoc />
         public Material Emissive(string name, Color color, float intensity = 2f) =>
             LoadOrCreate(name, () => MaterialFactory.CreateEmissive(name, color, intensity));
 
+        /// <inheritdoc />
         public Material Unlit(string name, Color color) =>
             LoadOrCreate(name, () => MaterialFactory.CreateUnlit(name, color));
 
+        /// <inheritdoc />
         public Material Checker(string name, Color a, Color b, float tiling) =>
             LoadOrCreate(name, () => MaterialFactory.CreateChecker(name, CheckerTexture(a, b), tiling));
 

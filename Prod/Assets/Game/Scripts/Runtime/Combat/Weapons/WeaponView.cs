@@ -8,13 +8,18 @@ namespace Game.Combat.Weapons
     /// </summary>
     public sealed class WeaponView : MonoBehaviour
     {
+        /// <summary>Точка дула (откуда летят пули).</summary>
         [SerializeField] private Transform muzzle;
+        /// <summary>Объект вспышки (включается на время выстрела).</summary>
         [SerializeField] private GameObject muzzleFlash;
+        /// <summary>Длительность вспышки, сек.</summary>
         [SerializeField] private float muzzleFlashDuration = 0.05f;
+        /// <summary>Источник звука. Пусто — AudioSource.PlayClipAtPoint.</summary>
         [SerializeField] private AudioSource audioSource;
 
         private float _flashTimer;
 
+        /// <summary>Точка дула (или сам объект, если не задана).</summary>
         public Transform Muzzle => muzzle != null ? muzzle : transform;
 
         private void Awake()
@@ -22,14 +27,17 @@ namespace Game.Combat.Weapons
             if (muzzleFlash != null) muzzleFlash.SetActive(false);
         }
 
+        /// <summary>Задаёт дуло и вспышку. Вызывать до активации объекта.</summary>
         public void Configure(Transform muzzlePoint, GameObject flash)
         {
             muzzle = muzzlePoint;
             muzzleFlash = flash;
         }
 
+        /// <summary>Показать/спрятать модель.</summary>
         public void SetVisible(bool visible) => gameObject.SetActive(visible);
 
+        /// <summary>Вспышка и звук выстрела.</summary>
         public void PlayFireEffects(AudioClip clip)
         {
             if (muzzleFlash != null)
@@ -42,6 +50,7 @@ namespace Game.Combat.Weapons
             PlaySound(clip);
         }
 
+        /// <summary>Проиграть звук, если он задан.</summary>
         public void PlaySound(AudioClip clip)
         {
             if (clip == null) return;
