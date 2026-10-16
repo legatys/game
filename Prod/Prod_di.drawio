@@ -1,0 +1,34 @@
+<mxfile host="Electron">
+  <diagram name="Страница-1" id="sc9eM9dMKAqJvNGO8rPt">
+    <mxGraphModel dx="1165" dy="692" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="CgEfq0awZZfM25AxrC-j-1" parent="1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="BaseMovment" vertex="1">
+          <mxGeometry height="60" width="140" x="580" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="CgEfq0awZZfM25AxrC-j-2" parent="CgEfq0awZZfM25AxrC-j-1" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" value="Move&lt;div&gt;Stop&lt;/div&gt;" vertex="1">
+          <mxGeometry height="30" width="140" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="CgEfq0awZZfM25AxrC-j-8" edge="1" parent="1" source="CgEfq0awZZfM25AxrC-j-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=0;" target="CgEfq0awZZfM25AxrC-j-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CgEfq0awZZfM25AxrC-j-5" parent="1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="Charapter" vertex="1">
+          <mxGeometry height="60" width="140" x="540" y="570" as="geometry" />
+        </mxCell>
+        <mxCell id="CgEfq0awZZfM25AxrC-j-6" parent="CgEfq0awZZfM25AxrC-j-5" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" value="Move&lt;div&gt;Stop&lt;/div&gt;" vertex="1">
+          <mxGeometry height="30" width="140" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="CgEfq0awZZfM25AxrC-j-11" edge="1" parent="1" source="CgEfq0awZZfM25AxrC-j-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=0;" target="CgEfq0awZZfM25AxrC-j-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CgEfq0awZZfM25AxrC-j-9" parent="1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="ConCharapter" vertex="1">
+          <mxGeometry height="60" width="140" x="420" y="710" as="geometry" />
+        </mxCell>
+        <mxCell id="CgEfq0awZZfM25AxrC-j-10" parent="CgEfq0awZZfM25AxrC-j-9" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" value="Move&lt;div&gt;Stop&lt;/div&gt;" vertex="1">
+          <mxGeometry height="30" width="140" y="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
