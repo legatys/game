@@ -111,6 +111,9 @@ namespace Game.Character
             _stateMachine.Tick(deltaTime);
         }
 
+        /// <summary>Настройка из кода. Вызывать до активации объекта (до Awake).</summary>
+        public void Configure(MovementConfig movementConfig) => config = movementConfig;
+
         // ---------- Конечный автомат ----------
 
         private void BuildStateMachine()

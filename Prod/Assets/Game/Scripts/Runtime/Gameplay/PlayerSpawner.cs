@@ -21,6 +21,13 @@ namespace Game.Gameplay
 
         public PlayerCharacter Player => _player;
 
+        /// <summary>Настройка из кода. Вызывать до активации объекта.</summary>
+        public void Configure(PlayerCharacter prefab, Transform spawn)
+        {
+            playerPrefab = prefab;
+            spawnPoint = spawn;
+        }
+
         private void Start()
         {
             if (spawnPoint == null) spawnPoint = transform;

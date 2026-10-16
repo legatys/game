@@ -5,9 +5,14 @@ Unity 6 (6000.5), URP, Input System. Весь код лежит в `Assets/Game/
 ## Быстрый старт
 
 1. Откройте проект в Unity и дождитесь компиляции.
-2. Меню **Tools → TPS Skeleton → 1. Build Demo Scene**.
-   Генератор создаст в `Assets/Game/Generated` конфиги, манекен со скелетом Mixamo, Animator Controller, оружие, эффекты и префабы, а затем соберёт сцену `Assets/Game/Scenes/Demo.unity`.
-3. Нажмите **Play**.
+2. Откроется сцена **`Assets/Game/Scenes/Playground.unity`**. Если не открылась — выберите **Tools → TPS Skeleton → Open Playground Scene**.
+   В редакторе виден полигон: это превью, оно не сохраняется в сцену.
+3. Нажмите **Play**. Персонаж, оружие, мишени, турель и уровень собираются прямо в игре из примитивов (`PlaygroundBootstrap`).
+
+Анимации берутся из `Assets/Game/Animation/PlaygroundAnimationSet.asset`. Сейчас там `Idle` и `Jogging` из `Assets/Models`, присед и смерть показаны процедурно. Добавьте клипы Mixamo в слоты и нажмите **Rebuild Animator Controller** в инспекторе.
+
+### Сцена из редактируемых префабов (по желанию)
+**Tools → TPS Skeleton → 1. Build Demo Scene** сохранит то же самое в префабы и ассеты (`Assets/Game/Generated`) и соберёт сцену `Assets/Game/Scenes/Demo.unity`. Её можно редактировать руками. Код построения общий: `Game.Demo.DemoContentFactory` и `DemoLevelBuilder`.
 
 Старый набросок (ConCharapter, GameSettings, сцены MainGame/CharacterSelect) перенесён в `Assets/_Legacy` без изменений: GUID сохранены, поэтому ссылки не сломались. Когда он станет не нужен, папку можно удалить.
 

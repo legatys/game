@@ -42,6 +42,13 @@ namespace Game.Animations
 
         public Animator Animator => animator;
 
+        /// <summary>Настройка из кода. Вызывать до активации объекта (до Awake).</summary>
+        public void Configure(Animator targetAnimator, AnimationSet set)
+        {
+            animator = targetAnimator;
+            animationSet = set;
+        }
+
         private void Awake()
         {
             // Берём компоненты напрямую: порядок Awake между компонентами не гарантирован.

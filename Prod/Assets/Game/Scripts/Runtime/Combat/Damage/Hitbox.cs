@@ -19,6 +19,12 @@ namespace Game.Combat
 
         private void Awake() => _health = GetComponentInParent<Health>();
 
+        public void Configure(float multiplier, bool critical)
+        {
+            damageMultiplier = multiplier;
+            isCritical = critical;
+        }
+
         public void ApplyDamage(in DamageInfo info)
         {
             if (_health != null) _health.ApplyDamage(info.Scaled(damageMultiplier, isCritical));

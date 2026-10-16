@@ -1,9 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
 
-namespace Game.EditorTools
+namespace Game.Demo
 {
     /// <summary>
     /// Паттерн Builder: строит "манекен" из примитивов на скелете с именами костей Mixamo
@@ -11,7 +10,7 @@ namespace Game.EditorTools
     /// Благодаря Humanoid-ретаргетингу на манекене проигрывается ЛЮБАЯ Humanoid-анимация Mixamo,
     /// а сам манекен можно заменить на настоящую модель с тем же Animator Controller.
     /// </summary>
-    internal sealed class MannequinBuilder
+    public sealed class MannequinBuilder
     {
         public const string BonePrefix = "mixamorig:";
 
@@ -101,8 +100,11 @@ namespace Game.EditorTools
 
         public Transform GetBone(string shortName) => _bones != null && _bones.TryGetValue(shortName, out var bone) ? bone : null;
 
-        /// <summary>Humanoid Avatar по скелету манекена. Сохраняется как ассет.</summary>
-        public static Avatar CreateAvatar(GameObject root, string assetPath)
+        /// <summary>
+        /// Humanoid Avatar по скелету манекена (AvatarBuilder — рантайм-API, работает и в игре).
+        /// root — объект, на котором будет Animator. В редакторе Avatar дополнительно сохраняется ассетом.
+        /// </summary>
+        public static Avatar CreateAvatar(GameObject root)
         {
             var skeleton = root.GetComponentsInChildren<Transform>(true)
                 .Select(t => new SkeletonBone
@@ -141,10 +143,7 @@ namespace Game.EditorTools
             var avatar = AvatarBuilder.BuildHumanAvatar(root, description);
             avatar.name = "MannequinAvatar";
             if (!avatar.isValid || !avatar.isHuman)
-                Debug.LogError("[TPS Skeleton] Не удалось построить Humanoid Avatar для манекена.");
-
-            EditorAssetUtility.EnsureFolder(System.IO.Path.GetDirectoryName(assetPath)?.Replace('\\', '/'));
-            AssetDatabase.CreateAsset(avatar, assetPath);
+                Debug.LogError("[Mannequin] Не удалось построить Humanoid Avatar для манекена.");
             return avatar;
         }
 
@@ -176,16 +175,16 @@ namespace Game.EditorTools
         }
 
         private void Box(string bone, Vector3 position, Vector3 size, Material material) =>
-            EditorAssetUtility.Visual(PrimitiveType.Cube, $"Geo_{bone}_Box", _bones[bone], position, size, material);
+            Primitives.Visual(PrimitiveType.Cube, $"Geo_{bone}_Box", _bones[bone], position, size, material);
 
         private void Sphere(string bone, Vector3 position, float diameter, Material material) =>
-            EditorAssetUtility.Visual(PrimitiveType.Sphere, $"Geo_{bone}_Sphere", _bones[bone], position, Vector3.one * diameter, material);
+            Primitives.Visual(PrimitiveType.Sphere, $"Geo_{bone}_Sphere", _bones[bone], position, Vector3.one * diameter, material);
 
         /// <summary>Капсула от кости from до дочерней кости to.</summary>
         private void Limb(string from, string to, float thickness, Material material)
         {
             var offset = _bones[to].localPosition;
-            var geo = EditorAssetUtility.Visual(PrimitiveType.Capsule, $"Geo_{from}_Limb", _bones[from], offset * 0.5f,
+            var geo = Primitives.Visual(PrimitiveType.Capsule, $"Geo_{from}_Limb", _bones[from], offset * 0.5f,
                 new Vector3(thickness, offset.magnitude * 0.5f, thickness), material);
             geo.transform.localRotation = Quaternion.FromToRotation(Vector3.up, offset.normalized);
         }

@@ -15,6 +15,8 @@ namespace Game.Interaction
 
         private void Awake() => GetComponent<Collider>().isTrigger = true;
 
+        public void Configure(Vector3 localLaunchVelocity) => launchVelocity = localLaunchVelocity;
+
         private void OnTriggerEnter(Collider other)
         {
             var player = other.GetComponentInParent<PlayerCharacter>();

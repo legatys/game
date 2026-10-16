@@ -34,6 +34,15 @@ namespace Game.Combat
 
         private void Awake() => Current = maxHealth;
 
+        /// <summary>Настройка из кода (генератор, рантайм-сборка уровня). Вызывать до активации объекта.</summary>
+        public void Configure(float max, float regenDelaySeconds = 4f, float regenPerSecondAmount = 0f)
+        {
+            maxHealth = max;
+            regenDelay = regenDelaySeconds;
+            regenPerSecond = regenPerSecondAmount;
+            Current = maxHealth;
+        }
+
         public void ApplyDamage(in DamageInfo info)
         {
             if (!IsAlive || invulnerable || info.Amount <= 0f) return;

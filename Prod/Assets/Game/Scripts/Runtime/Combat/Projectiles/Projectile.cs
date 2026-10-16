@@ -23,6 +23,8 @@ namespace Game.Combat
 
         private void Awake() => _trail = GetComponentInChildren<TrailRenderer>();
 
+        public void Configure(GameObject explosionEffect) => explosionEffectPrefab = explosionEffect;
+
         public void Launch(Vector3 velocity, WeaponDefinition definition, GameObject owner)
         {
             if (_trail != null) _trail.Clear(); // иначе след из пула тянется с прошлой позиции

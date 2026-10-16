@@ -52,6 +52,9 @@ namespace Game.Cameras
 
         private void OnDestroy() => ServiceLocator.Unregister<ICameraRig>(this);
 
+        /// <summary>Настройка из кода. Вызывать до активации объекта (до Awake).</summary>
+        public void Configure(CameraConfig cameraConfig) => config = cameraConfig;
+
         public void SetTarget(ICameraTarget target)
         {
             _target = target;

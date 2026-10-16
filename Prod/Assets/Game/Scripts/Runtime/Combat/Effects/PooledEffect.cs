@@ -24,6 +24,14 @@ namespace Game.Combat
             if (effectLight != null) _lightIntensity = effectLight.intensity;
         }
 
+        public void Configure(float lifetimeSeconds, float fromScale, float toScale, Light fadingLight = null)
+        {
+            lifetime = lifetimeSeconds;
+            startScale = fromScale;
+            endScale = toScale;
+            effectLight = fadingLight;
+        }
+
         public void OnSpawned()
         {
             _age = 0f;

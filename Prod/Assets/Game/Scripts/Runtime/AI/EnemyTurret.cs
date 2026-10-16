@@ -61,6 +61,15 @@ namespace Game.AI
             BuildStateMachine();
         }
 
+        /// <summary>Настройка из кода. Вызывать до активации объекта (до Awake).</summary>
+        public void Configure(Transform yaw, Transform pitch, Transform socket, WeaponDefinition weaponDefinition)
+        {
+            yawPivot = yaw;
+            pitchPivot = pitch;
+            weaponSocket = socket;
+            weapon = weaponDefinition;
+        }
+
         private void BuildStateMachine()
         {
             var idle = new TurretIdleState(this);

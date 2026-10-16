@@ -33,6 +33,13 @@ namespace Game.Combat.Weapons
                     AddWeapon(definition);
         }
 
+        /// <summary>Настройка из кода. Вызывать до активации объекта (до Awake).</summary>
+        public void Configure(WeaponDefinition[] weapons, Transform socket)
+        {
+            startingWeapons = weapons ?? Array.Empty<WeaponDefinition>();
+            weaponSocket = socket;
+        }
+
         /// <summary>Добавить оружие. Если такое уже есть — добавляются патроны.</summary>
         public Weapon AddWeapon(WeaponDefinition definition)
         {

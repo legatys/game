@@ -27,6 +27,9 @@ namespace Game.Interaction
             if (visual != null) _visualStart = visual.localPosition;
         }
 
+        /// <summary>Объект, который крутится и прячется после подбора.</summary>
+        public void Configure(Transform visualRoot) => visual = visualRoot;
+
         private void Update()
         {
             if (_respawnTimer > 0f)

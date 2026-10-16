@@ -12,17 +12,17 @@
 | **Observer** | `EventBus`, `Health` | События (урон, смерть, появление игрока, пауза) — подписчики не связаны с издателем: HUD не знает про турель. |
 | **State** | `StateMachine` | Каждое состояние движения/ИИ — отдельный класс, переходы описаны таблицей условий в одном месте. |
 | **Object Pool** | `GameObjectPool` | Пули, трассеры, эффекты переиспользуются вместо Instantiate/Destroy — меньше мусора и фризов. |
-| **Composition Root** | `CoreServices` | Глобальные сервисы создаются в одном месте до загрузки сцены. |
+| **Composition Root** | `CoreServices`, `PlaygroundBootstrap` | Глобальные сервисы создаются в одном месте до загрузки сцены. |
 | **Adapter** | `PlayerInputReader`, `CharacterAnimator` | Внешние API (Input System, Animator) спрятаны за своими интерфейсами — их можно заменить, не трогая геймплей. |
 | **Data-driven config** | `MovementConfig` | Цифры баланса живут в ассетах — правятся в инспекторе без перекомпиляции. |
 | **Facade** | `PlayerCharacter`, `TpsSkeletonMenu` | Один простой вход в сложную подсистему (игрок для других систем, меню для генератора). |
 | **Template Method** | `CharacterState`, `Pickup` | Базовый класс фиксирует порядок шагов, наследник меняет только свой шаг. |
 | **Proxy** | `Hitbox` | Хитбокс подставляется вместо Health и меняет урон по пути. |
 | **Flyweight** | `WeaponDefinition` | Общие неизменяемые данные оружия в одном ассете на всех владельцев. |
-| **Strategy** | `IFireMode`, `IShotStrategy` | Поведение оружия собирается из взаимозаменяемых частей: режим огня × тип выстрела. |
-| **Factory** | `WeaponFactory` | Создание сложного объекта (оружие = визуал + стратегии) спрятано в одном месте. |
+| **Strategy** | `IFireMode`, `IShotStrategy`, `IMaterialProvider` | Поведение оружия собирается из взаимозаменяемых частей: режим огня × тип выстрела. |
+| **Factory** | `WeaponFactory`, `DemoContentFactory` | Создание сложного объекта (оружие = визуал + стратегии) спрятано в одном месте. |
 | **MVP** | `HudPresenter` | Логика HUD (Presenter) отделена от отрисовки (View) — IMGUI можно заменить на uGUI. |
-| **Builder** | `AnimatorControllerBuilder`, `MannequinBuilder`, `Serialized` | Пошаговая сборка сложных объектов: Animator Controller, манекен со скелетом, настройка полей. |
+| **Builder** | `MannequinBuilder`, `DemoLevelBuilder`, `AnimatorControllerBuilder` | Пошаговая сборка сложных объектов: Animator Controller, манекен со скелетом, уровень. |
 
 ## Обзор пакетов
 
@@ -40,6 +40,7 @@ flowchart LR
     Interaction["Interaction<br/><small>Подбираемые предметы и объекты уровня</small>"]
     Gameplay["Gameplay<br/><small>Правила игры: появление игрока</small>"]
     UI["UI<br/><small>HUD (MVP) и пауза</small>"]
+    Demo["Demo<br/><small>Демо-контент из примитивов: фабрики, уровень, сцена Playground (рантайм)</small>"]
     EditorTools["EditorTools<br/><small>Генератор демо: манекен, аниматор, префабы, сцена (только редактор)</small>"]
     Inputs -->|1| Core
     Character -->|1| Core
@@ -66,9 +67,15 @@ flowchart LR
     UI -->|1| Character
     UI -->|2| Core
     UI -->|1| Inputs
+    Demo -->|1| Character
+    Demo -->|1| AI
+    Demo -->|1| Combat_Weapons
+    Demo -->|1| Gameplay
+    Demo -->|1| Cameras
+    Demo -->|1| Animations
     EditorTools -->|1| Animations
+    EditorTools -->|5| Demo
     EditorTools -->|1| Combat_Weapons
-    EditorTools -->|1| Gameplay
 ```
 
 ## Core — `Game.Core`
@@ -286,6 +293,7 @@ classDiagram
         +IsSprinting, IsCrouching, IsSliding, IsDead, IsAiming : bool
         +AirJumpsRemaining : int
         +Jumped, Landed, Respawned, StateChanged : event
+        +Configure(movementConfig)
         -BuildStateMachine()
         +GetMoveDirection() Vector3
         +GetGroundSpeed() float
@@ -407,6 +415,7 @@ classDiagram
     }
     class ThirdPersonCamera {
         <<MonoBehaviour>>
+        +Configure(config)
         -LateUpdate()
         -ReadInput(dt)
         -UpdateRecoil(dt)
@@ -457,6 +466,7 @@ classDiagram
         <<MonoBehaviour>>
         -animator : Animator
         -animationSet : AnimationSet
+        +Configure(animator, set)
         -Update() выставляет параметры
         -UpdateUpperBodyLayer(dt)
         -OnJumped/OnWeaponFired/OnDamaged() триггеры
@@ -506,6 +516,7 @@ classDiagram
         +Current, Max, Normalized : float
         +IsAlive : bool
         +Damaged, Died, Changed, Revived : event
+        +Configure(max, regenDelay, regenPerSecond)
         +ApplyDamage(in info)
         +Heal(amount) float
         +Revive()
@@ -514,9 +525,11 @@ classDiagram
         <<MonoBehaviour>>
         -damageMultiplier : float
         -isCritical : bool
+        +Configure(multiplier, critical)
     }
     class Projectile {
         <<MonoBehaviour>>
+        +Configure(explosionEffect)
         +Launch(velocity, definition, owner)
         -Explode(position)
     }
@@ -526,6 +539,7 @@ classDiagram
     }
     class PooledEffect {
         <<MonoBehaviour>>
+        +Configure(lifetime, startScale, endScale, light)
     }
     class Tracer {
         <<MonoBehaviour>>
@@ -644,6 +658,7 @@ classDiagram
     class WeaponView {
         <<MonoBehaviour>>
         +Muzzle : Transform
+        +Configure(muzzle, flash)
         +PlayFireEffects(clip)
         +PlaySound(clip)
         +SetVisible(bool)
@@ -661,6 +676,7 @@ classDiagram
         +Weapons : IReadOnlyList~Weapon~
         +Current : Weapon
         +WeaponEquipped, WeaponAdded : event
+        +Configure(weapons, socket)
         +AddWeapon(def) Weapon
         +Equip(index) bool
         +EquipNext()
@@ -734,6 +750,7 @@ classDiagram
         -weapon : WeaponDefinition
         -detectionRange, turnSpeed
         +Health, Weapon
+        +Configure(yaw, pitch, socket, weapon)
         +CanSeeTarget() bool
         +AimAt(point, dt) float
         +Scan(dt)
@@ -783,6 +800,7 @@ classDiagram
     direction LR
     class Pickup {
         <<abstract>>
+        +Configure(visual)
         -OnTriggerEnter(other)
         #TryApply(player) bool*
     }
@@ -797,6 +815,7 @@ classDiagram
     class JumpPad {
         <<MonoBehaviour>>
         -launchVelocity : Vector3
+        +Configure(localVelocity)
     }
     HealthPickup --|> Pickup
     AmmoPickup --|> Pickup
@@ -823,6 +842,7 @@ classDiagram
         -playerPrefab : PlayerCharacter
         -spawnPoint : Transform
         -respawnDelay : float
+        +Configure(prefab, spawnPoint)
         -Start()
         -RespawnRoutine()
     }
@@ -881,6 +901,121 @@ classDiagram
 | `ImGuiHudView` | MonoBehaviour | HUD на IMGUI: прицел, хит-маркер, HP, патроны, подсказки. |
 | `PauseMenu` | MonoBehaviour | Пауза: timeScale, курсор, отключение ввода, GamePausedEvent. |
 
+## Demo — `Game.Demo`
+
+Демо-контент из примитивов: фабрики, уровень, сцена Playground (рантайм).
+
+```mermaid
+classDiagram
+    direction LR
+    class IMaterialProvider {
+        <<interface>>
+        +Lit(name, color, smoothness)
+        +Emissive(name, color, intensity)
+        +Unlit(name, color)
+        +Checker(name, a, b, tiling)
+    }
+    class MaterialFactory {
+        <<static>>
+        +CreateLit(...)
+        +CreateEmissive(...)
+        +CreateUnlit(...)
+        +CreateChecker(...)
+        +CreateCheckerTexture(a, b)
+    }
+    class RuntimeMaterialProvider {
+        <<class>>
+        +DestroyAll()
+    }
+    class Primitives {
+        <<static>>
+        +Visual(type, name, parent, pos, scale, material)
+        +Solid(...)
+        +Child(name, parent, pos)
+        +Inactive(name, parent)
+    }
+    class MannequinBuilder {
+        <<class>>
+        +WithMaterials(body, joints, accent)
+        +Build(name) GameObject
+        +GetBone(name) Transform
+        +CreateAvatar(root) Avatar$
+    }
+    class DemoWeapons {
+        <<class>>
+        +Pistol, Rifle, Shotgun, Launcher, TurretRifle
+        +PlayerLoadout, All : WeaponDefinition
+    }
+    class DemoWeaponCatalog {
+        <<static>>
+        +Setup(name) Action~WeaponDefinition~
+        +ViewShape(name)
+        +CreateInMemory() DemoWeapons
+    }
+    class DemoPrefabs {
+        <<class>>
+        +Player, Dummy, Turret, HealthPickup, AmmoPickup, JumpPad : GameObject
+    }
+    class DemoContentFactory {
+        <<static>>
+        +BuildPlayer(movement, set, loadout, materials, avatarProvider)
+        +BuildDummy(materials)
+        +BuildTurret(materials, weapon)
+        +BuildHealthPickup/AmmoPickup/JumpPad(materials)
+        +BuildWeaponView(name, materials)
+        +BuildTracer/Impact/Explosion/Grenade(...)
+        +LinkWeapons(weapons, view, tracer, impact, grenade)
+    }
+    class DemoLevelBuilder {
+        <<class>>
+        +SpawnPoint : Transform
+        +Build(parent) Transform
+        +SetupCamera(config, near)$ ThirdPersonCamera
+        +BuildSystems(playerPrefab, spawn)$ GameObject
+    }
+    class PlaygroundBootstrap {
+        <<MonoBehaviour>>
+        -animationSet : AnimationSet
+        -movementConfig, cameraConfig
+        -BuildPlayable()
+        -BuildTemplates(...) DemoPrefabs
+        -BuildPreview()
+        -DestroyPreview()
+    }
+    RuntimeMaterialProvider ..|> IMaterialProvider
+    RuntimeMaterialProvider ..> MaterialFactory
+    DemoContentFactory ..> IMaterialProvider
+    DemoContentFactory ..> MannequinBuilder
+    DemoContentFactory ..> Primitives
+    DemoContentFactory ..> DemoWeaponCatalog
+    DemoContentFactory ..> PlayerCharacter : собирает
+    DemoContentFactory ..> EnemyTurret : собирает
+    DemoWeaponCatalog ..> DemoWeapons : создаёт
+    DemoWeaponCatalog ..> WeaponDefinition : настраивает
+    DemoLevelBuilder --> DemoPrefabs
+    DemoLevelBuilder --> IMaterialProvider
+    DemoLevelBuilder ..> PlayerSpawner : BuildSystems
+    DemoLevelBuilder ..> ThirdPersonCamera : SetupCamera
+    PlaygroundBootstrap ..> DemoContentFactory
+    PlaygroundBootstrap ..> DemoLevelBuilder
+    PlaygroundBootstrap *-- RuntimeMaterialProvider
+    PlaygroundBootstrap --> AnimationSet
+```
+
+| Класс | Тип | Что делает |
+|---|---|---|
+| `IMaterialProvider` | interface | Источник материалов для примитивов: ассеты (редактор) или память (игра). **[Strategy]** |
+| `MaterialFactory` | static | Создание материалов URP Lit/Unlit и текстуры-шахматки. |
+| `RuntimeMaterialProvider` | class | Материалы в памяти с кэшем по имени (сцена Playground и её превью). |
+| `Primitives` | static | Создание примитивов с коллайдером/без и неактивных объектов для настройки до Awake. |
+| `MannequinBuilder` | class | Манекен из примитивов на скелете Mixamo (mixamorig:*) + Humanoid Avatar через AvatarBuilder. **[Builder]** |
+| `DemoWeapons` | class | Набор демо-оружия. |
+| `DemoWeaponCatalog` | static | Цифры баланса и размеры моделей демо-оружия — общие для генератора и Playground. |
+| `DemoPrefabs` | class | Шаблоны для расстановки: префабы (редактор) или неактивные образцы (игра). |
+| `DemoContentFactory` | static | Строит из примитивов игрока, мишень, турель, предметы, модели оружия и эффекты. **[Factory]** |
+| `DemoLevelBuilder` | class | Строит полигон: тир, укрытия, тоннель, лестница, рампа, паркур, батут, турель, ящики; камера и системы сцены. **[Builder]** |
+| `PlaygroundBootstrap` | MonoBehaviour | Сцена Playground из коробки: собирает полигон и игрока в игре; в редакторе — несохраняемое превью. **[Composition Root]** |
+
 ## EditorTools — `Game.EditorTools`
 
 Генератор демо: манекен, аниматор, префабы, сцена (только редактор).
@@ -907,20 +1042,14 @@ classDiagram
         +Build(path, mask) AnimatorController
         +LoadOrCreateUpperBodyMask(path)$
     }
-    class MannequinBuilder {
-        <<class>>
-        +WithMaterials(body, joints, accent)
-        +Build(name) GameObject
-        +GetBone(name) Transform
-        +CreateAvatar(root, path)$
-    }
     class WeaponContentBuilder {
         <<static>>
-        +Build(overwrite) Result
+        +Build(overwrite) DemoWeapons
+        +Prefab(path, overwrite, build) GameObject
     }
     class PrefabContentBuilder {
         <<static>>
-        +Build(...) Result
+        +Build(...) DemoPrefabs
     }
     class DemoSceneBuilder {
         <<static>>
@@ -929,17 +1058,16 @@ classDiagram
     class AnimationSetEditor {
         <<Editor>>
     }
-    class MaterialLibrary {
+    class AssetMaterialProvider {
+        <<class>>
+    }
+    class PlaygroundSceneOpener {
         <<static>>
+        +Open()
+        -OpenIfUntitled()
     }
     class EditorAssetUtility {
         <<static>>
-    }
-    class Serialized {
-        <<class>>
-        +Of(target)$
-        +Set(field, value)
-        +Apply()
     }
     class SkeletonPaths {
         <<static>>
@@ -950,10 +1078,14 @@ classDiagram
     TpsSkeletonMenu ..> DemoSceneBuilder
     CoreAssetsBuilder ..> AnimatorControllerBuilder
     AnimatorControllerBuilder ..> AnimationSet : читает клипы
-    PrefabContentBuilder ..> MannequinBuilder
+    PrefabContentBuilder ..> DemoContentFactory
+    WeaponContentBuilder ..> DemoContentFactory
+    DemoSceneBuilder ..> DemoLevelBuilder
+    AssetMaterialProvider ..|> IMaterialProvider
+    PrefabContentBuilder ..> AssetMaterialProvider
     AnimationSetEditor ..> AnimatorControllerBuilder
-    WeaponContentBuilder ..> WeaponDefinition : создаёт
-    DemoSceneBuilder ..> PlayerSpawner : размещает
+    WeaponContentBuilder ..> WeaponDefinition : создаёт ассеты
+    PlaygroundSceneOpener ..> PlaygroundBootstrap : открывает сцену
 ```
 
 | Класс | Тип | Что делает |
@@ -961,12 +1093,11 @@ classDiagram
 | `TpsSkeletonMenu` | static | Меню Tools → TPS Skeleton: вся генерация одной кнопкой. **[Facade]** |
 | `CoreAssetsBuilder` | static | Конфиги, AnimationSet (с клипами из Assets/Models), Animator Controller. |
 | `AnimatorControllerBuilder` | class | Собирает Animator Controller из AnimationSet: blend trees, слои, переходы. **[Builder]** |
-| `MannequinBuilder` | class | Манекен из примитивов на скелете Mixamo + Humanoid Avatar. **[Builder]** |
-| `WeaponContentBuilder` | static | Эффекты, модели оружия из примитивов, WeaponDefinition-ы. |
-| `PrefabContentBuilder` | static | Префабы: игрок, мишень, турель, аптечка, патроны, батут. |
-| `DemoSceneBuilder` | static | Сцена-полигон: тир, тоннель, лестница, рампа, паркур, турель. |
+| `WeaponContentBuilder` | static | Сохраняет в ассеты эффекты, модели оружия и WeaponDefinition-ы из DemoContentFactory. |
+| `PrefabContentBuilder` | static | Сохраняет в префабы игрока, мишень, турель, предметы; Avatar манекена — ассетом. |
+| `DemoSceneBuilder` | static | Сцена Demo из префабов; раскладка — тот же DemoLevelBuilder. |
 | `AnimationSetEditor` | Editor | Инспектор AnimationSet: подсказки, отчёт о заменах, кнопка Rebuild. |
-| `MaterialLibrary` | static | Материалы URP Lit/Unlit и текстура-шахматка. |
+| `AssetMaterialProvider` | class | IMaterialProvider для генератора: материалы сохраняются ассетами .mat. |
+| `PlaygroundSceneOpener` | static | При старте редактора открывает сцену Playground вместо пустой безымянной; меню Open Playground Scene. |
 | `EditorAssetUtility` | static | Папки, ScriptableObject, префабы, примитивы. |
-| `Serialized` | class | Fluent-установка приватных [SerializeField] через SerializedObject. **[Builder]** |
 | `SkeletonPaths` | static | Пути генерируемых ассетов (Assets/Game/Generated). |

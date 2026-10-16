@@ -22,6 +22,12 @@ namespace Game.Combat.Weapons
             if (muzzleFlash != null) muzzleFlash.SetActive(false);
         }
 
+        public void Configure(Transform muzzlePoint, GameObject flash)
+        {
+            muzzle = muzzlePoint;
+            muzzleFlash = flash;
+        }
+
         public void SetVisible(bool visible) => gameObject.SetActive(visible);
 
         public void PlayFireEffects(AudioClip clip)
